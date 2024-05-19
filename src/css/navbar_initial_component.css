@@ -1,0 +1,13 @@
+.gradient-bg {
+  background: linear-gradient(to right, #6366F1, #9333EA);
+}
+
+.text-navbar {
+  color: white;
+  font-weight: 500;
+  transition: color 0.3s ease; /* Añadir transición para suavizar el cambio de color */
+}
+
+.text-navbar:hover {
+  color: rgb(219, 219, 219);
+}

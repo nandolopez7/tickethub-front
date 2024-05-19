@@ -1,0 +1,37 @@
+.carousel-style {
+  margin-right: 5rem; /* Estilo por defecto */
+}
+
+.padding-row {
+  padding: 8rem;
+}
+
+.custom-button {
+  color: #6366f1;
+  border: 2px solid #6366f1;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.custom-button:hover {
+  background-color: transparent;
+  color: #ffffff;
+}
+/* Media query para pantallas medianas */
+@media (max-width: 992px) {
+  .carousel-style {
+    margin-right: 0; /* Anula el margen derecho en pantallas medianas */
+  }
+  .padding-row {
+    padding: 4rem; /* Anula el relleno en pantallas medianas */
+  }
+}
+
+/* Media query para pantallas pequeñas */
+@media (max-width: 768px) {
+  .carousel-style {
+    margin-right: 0; /* Anula el margen derecho en pantallas pequeñas */
+  }
+  .padding-row {
+    padding: 2rem; /* Anula el relleno en pantallas pequeñas */
+  }
+}
