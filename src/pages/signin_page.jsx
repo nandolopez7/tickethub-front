@@ -1,12 +1,19 @@
 import { NavbarInitialComponent } from "../components/navbar_initial_component";
 import React, { useState } from "react";
-import { Container, Col } from "react-bootstrap";
+import { Container, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import "../css/sign_pages_style.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
 export function SignIn() {
   const [isActive, setIsActive] = useState(false);
   const [previewSrc, setPreviewSrc] = useState(null);
+
+  const tooltipSelfie = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      This will be use to verify your identity when accessing to events. As soon
+      as you click, selfie will be taken, be prepared!
+    </Tooltip>
+  );
 
   const handleTakeSelfie = async () => {
     try {
@@ -75,19 +82,25 @@ export function SignIn() {
                         className="selfie-preview"
                       />
                     ) : (
-                      <button
-                        type="button"
-                        className="button-selfie"
-                        onClick={handleTakeSelfie}
+                      <OverlayTrigger
+                        placement="right"
+                        delay={{ show: 250, hide: 400 }}
+                        overlay={tooltipSelfie}
                       >
-                        Take a selfie
-                        <FontAwesomeIcon
-                          icon={faCamera}
-                          className="icon-selfie"
-                          size="lg"
-                          style={{ margin: "0 5px" }}
-                        />
-                      </button>
+                        <button
+                          type="button"
+                          className="button-selfie"
+                          onClick={handleTakeSelfie}
+                        >
+                          Take a selfie
+                          <FontAwesomeIcon
+                            icon={faCamera}
+                            className="icon-selfie"
+                            size="lg"
+                            style={{ margin: "0 5px" }}
+                          />
+                        </button>
+                      </OverlayTrigger>
                     )}
                   </div>
                   {previewSrc && (
@@ -124,9 +137,7 @@ export function SignIn() {
               <div className="toggle">
                 <div className="toggle-panel toggle-left">
                   <h1>Already an user? </h1>
-                  <p>
-                    Jump in to the greates shows by signing in!
-                  </p>
+                  <p>Jump in to the greates shows by signing in!</p>
                   <button
                     className="hidden"
                     id="login"
