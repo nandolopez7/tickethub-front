@@ -48,13 +48,7 @@ export function NavbarInitialComponent() {
                 className="text-navbar"
                 onClick={() => handleLinkClick("/sign-in")}
               >
-                Sign In
-              </Nav.Link>
-              <Nav.Link
-                className="text-navbar"
-                onClick={() => handleLinkClick("/sign-up")}
-              >
-                Sign Up
+                Sign In/Up
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
