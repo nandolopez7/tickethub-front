@@ -5,7 +5,7 @@ import {BrowseEvent} from "./pages/browse-event_page";
 import {Contact} from "./pages/contact_page";
 import {About} from "./pages/about_page";
 import {SignIn} from "./pages/signin_page";
-import {SignUp} from "./pages/signup_page";
+
 
 
 /**Como crear rutas  
@@ -24,7 +24,6 @@ function App() {
       <Route path="/contact" element={<Contact />} />
       <Route path="/about" element={<About />} />
       <Route path="/sign-in" element={<SignIn />} />
-      <Route path="/sign-up" element={<SignUp />} />
     </Routes>
 
   </BrowserRouter>
