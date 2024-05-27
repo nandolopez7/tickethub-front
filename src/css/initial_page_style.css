@@ -17,6 +17,50 @@
   background-color: transparent;
   color: #ffffff;
 }
+
+.row-events-init {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 50px;
+}
+
+.card-init {
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+  margin: 15px;
+  width: 25rem;
+  transition: transform 0.3s ease;
+  margin: 20px;
+}
+
+.card-init:hover {
+  transform: translateY(-20px) scale(1.03);
+}
+
+
+.img-init-cont {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 50px; /* Espacio entre imágenes */
+  padding: 20px; /* Espacio alrededor del contenedor */
+}
+
+.img-init {
+  width: 200px; /* Ancho fijo para todas las imágenes */
+  height: auto; /* Mantiene la proporción de la imagen */
+  max-width: 100%; /* Asegura que las imágenes no se desborden */
+  filter: grayscale();
+  transition: filter 0.3s ease-in-out;
+}
+
+.img-init:hover {
+  filter: none;
+  cursor: pointer;
+}
+
+
 /* Media query para pantallas medianas */
 @media (max-width: 992px) {
   .carousel-style {
@@ -25,6 +69,14 @@
   .padding-row {
     padding: 4rem; /* Anula el relleno en pantallas medianas */
   }
+  .card-init {
+    margin: 10px;
+    width: 17rem;
+  }
+  .row-events-init {
+    padding: 20px;
+  }
+  
 }
 
 /* Media query para pantallas pequeñas */
@@ -34,5 +86,12 @@
   }
   .padding-row {
     padding: 2rem; /* Anula el relleno en pantallas pequeñas */
+  }
+  .card-init {
+    margin: 15px 0;
+    width: 19rem;
+  }
+  .row-events-init {
+    padding: 0;
   }
 }
