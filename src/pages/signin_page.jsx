@@ -15,6 +15,8 @@ export function SignIn() {
     password: '',
   });
 
+  const URL_BACKEND = 'http://127.0.0.1:8000'
+
   const [formDataLogin, setFormDataLogin] = useState({
     emaillogin: '',
     password: '',
@@ -96,7 +98,7 @@ export function SignIn() {
     }
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/users', {
+      const response = await fetch(`${URL_BACKEND}/users/`, {
         method: 'POST',
         body: data,
       });
@@ -126,7 +128,7 @@ export function SignIn() {
     }
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/users', {
+      const response = await fetch(`${URL_BACKEND}/users/login/`, {
         method: 'POST',
         body: data,
       });
