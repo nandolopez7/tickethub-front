@@ -1,31 +1,40 @@
 import { NavbarInitialComponent } from "../components/navbar_initial_component";
 import React, { useState } from "react";
-import { Container, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
+import {
+  Container,
+  Col,
+  OverlayTrigger,
+  Tooltip,
+  Modal,
+  Button,
+} from "react-bootstrap";
 import "../css/sign_pages_style.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
+
 export function SignIn() {
   const [isActive, setIsActive] = useState(false);
   const [previewSrc, setPreviewSrc] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    identificationNumber: '',
-    email: '',
-    password: '',
+    firstName: "",
+    lastName: "",
+    identificationNumber: "",
+    email: "",
+    password: "",
   });
 
-  const URL_BACKEND = 'http://127.0.0.1:8000'
+  const URL_BACKEND = "http://127.0.0.1:8000";
 
   const [formDataLogin, setFormDataLogin] = useState({
-    emaillogin: '',
-    password: '',
+    emaillogin: "",
+    password: "",
   });
 
   const tooltipSelfie = (props) => (
     <Tooltip id="button-tooltip" {...props}>
-      This will be use to verify your identity when accessing to events. As soon
-      as you click, selfie will be taken, be prepared!
+      This will be used to verify your identity when accessing to events. As
+      soon as you click, a selfie will be taken, be prepared!
     </Tooltip>
   );
 
@@ -48,6 +57,7 @@ export function SignIn() {
         setPreviewSrc(dataURL);
 
         video.srcObject.getTracks().forEach((track) => track.stop());
+        setShowModal(true); // Mostrar el modal con la previsualización
       };
     } catch (error) {
       console.error("Error accessing camera:", error);
@@ -56,6 +66,7 @@ export function SignIn() {
 
   const handleRetakeSelfie = () => {
     setPreviewSrc(null);
+    setShowModal(false); // Cerrar el modal
   };
 
   const handleInputChange = (event) => {
@@ -77,41 +88,35 @@ export function SignIn() {
   const handleSaveSelfie = () => {
     // Aquí puedes guardar la selfie, por ejemplo, enviándola a un servidor
     console.log("Selfie saved:", previewSrc);
+    setShowModal(false); // Cerrar el modal después de guardar
   };
 
-  
   const handleRegisterClick = async (event) => {
     event.preventDefault();
 
     const data = new FormData();
-    data.append('first_name', formData.firstName);
-    data.append('last_name', formData.lastName);
-    data.append('identification_number', formData.identificationNumber);
-    data.append('email', formData.email);
-    data.append('password', formData.password);
-
-    data.append('photo',previewSrc);
-
-    // Mostrar las entradas de FormData en la consola
-    for (let [key, value] of data.entries()) {
-      console.log(`${key}:`, value);
-    }
+    data.append("first_name", formData.firstName);
+    data.append("last_name", formData.lastName);
+    data.append("identification_number", formData.identificationNumber);
+    data.append("email", formData.email);
+    data.append("password", formData.password);
+    data.append("photo", previewSrc);
 
     try {
       const response = await fetch(`${URL_BACKEND}/users/`, {
-        method: 'POST',
+        method: "POST",
         body: data,
       });
 
       if (response.ok) {
-        console.log('User registered successfully.');
+        console.log("User registered successfully.");
         // Maneja la respuesta exitosa aquí
       } else {
-        console.error('Failed to register user:', response.statusText);
+        console.error("Failed to register user:", response.statusText);
         // Maneja los errores aquí
       }
     } catch (error) {
-      console.error('Error registering user:', error);
+      console.error("Error registering user:", error);
     }
   };
 
@@ -119,34 +124,27 @@ export function SignIn() {
     event.preventDefault();
 
     const data = new FormData();
-    data.append('email', formDataLogin.emaillogin);
-    data.append('password', formDataLogin.password);
-
-    // Mostrar las entradas de FormData en la consola
-    for (let [key, value] of data.entries()) {
-      console.log(`${key}:`, value);
-    }
+    data.append("email", formDataLogin.emaillogin);
+    data.append("password", formDataLogin.password);
 
     try {
       const response = await fetch(`${URL_BACKEND}/users/login/`, {
-        method: 'POST',
+        method: "POST",
         body: data,
       });
 
       if (response.ok) {
-        console.log('Login successfully.');
+        console.log("Login successfully.");
         // Maneja la respuesta exitosa aquí
       } else {
-        console.error('Failed to login user:', response.statusText);
+        console.error("Failed to login user:", response.statusText);
         // Maneja los errores aquí
       }
     } catch (error) {
-      console.error('Error login user:', error);
+      console.error("Error login user:", error);
     }
   };
 
-
-  
   const handleCreateClick = () => {
     setIsActive(true);
   };
@@ -167,78 +165,90 @@ export function SignIn() {
             <div className="form-container sign-up">
               <form onSubmit={handleRegisterClick}>
                 <h1>Create Account</h1>
-                <input type="text" name="firstName" placeholder="First name" onChange={handleInputChange} />
-                <input type="text" name="lastName" placeholder="Last name" onChange={handleInputChange} />
-                <input type="text" name="identificationNumber" placeholder="Identification number" onChange={handleInputChange} />
-                <input type="email" name="email" placeholder="Email" onChange={handleInputChange} />
-                <input type="password" name="password" placeholder="Password" onChange={handleInputChange} />
+                <input
+                  type="text"
+                  name="firstName"
+                  placeholder="First name"
+                  onChange={handleInputChange}
+                />
+                <input
+                  type="text"
+                  name="lastName"
+                  placeholder="Last name"
+                  onChange={handleInputChange}
+                />
+                <input
+                  type="text"
+                  name="identificationNumber"
+                  placeholder="Identification number"
+                  onChange={handleInputChange}
+                />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  onChange={handleInputChange}
+                />
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  onChange={handleInputChange}
+                />
 
                 <div className="register-buttons">
-                  <button  type="submit"> Sign Up</button>
+                  <button type="submit"> Sign Up</button>
                   <div className="selfie-container">
-                    {previewSrc ? (
-                      <img
-                        src={previewSrc}
-                        alt="Selfie Preview"
-                        className="selfie-preview"
-                      />
-                    ) : (
-                      <OverlayTrigger
-                        placement="right"
-                        delay={{ show: 250, hide: 400 }}
-                        overlay={tooltipSelfie}
+                    <OverlayTrigger
+                      placement="right"
+                      delay={{ show: 250, hide: 400 }}
+                      overlay={tooltipSelfie}
+                    >
+                      <button
+                        type="button"
+                        className="button-selfie"
+                        onClick={handleTakeSelfie}
                       >
-                        <button
-                          type="button"
-                          className="button-selfie"
-                          onClick={handleTakeSelfie}
-                        >
-                          Take a selfie
-                          <FontAwesomeIcon
-                            icon={faCamera}
-                            className="icon-selfie"
-                            size="lg"
-                            style={{ margin: "0 5px" }}
-                          />
-                        </button>
-                      </OverlayTrigger>
-                    )}
+                        Take a selfie
+                        <FontAwesomeIcon
+                          icon={faCamera}
+                          className="icon-selfie"
+                          size="lg"
+                          style={{ margin: "0 5px" }}
+                        />
+                      </button>
+                    </OverlayTrigger>
                   </div>
-                  {previewSrc && (
-                    <div className="selfie-controls">
-                      <button
-                        className="button-selfie-control"
-                        type="button"
-                        onClick={handleRetakeSelfie}
-                      >
-                        Retake
-                      </button>
-                      <button
-                        className="button-selfie-control"
-                        type="button"
-                        onClick={handleSaveSelfie}
-                      >
-                        Save
-                      </button>
-                    </div>
-                  )}
                 </div>
               </form>
             </div>
             <div className="form-container sign-in">
               <form onSubmit={handleLogin}>
                 <h1>Sign In</h1>
-                <input type="email" name="emaillogin" placeholder="Email" onChange={handleInputLoginChange} />
-                <input type="password" name= "password" placeholder="Password" onChange={handleInputLoginChange} />
+                <input
+                  type="email"
+                  name="emaillogin"
+                  placeholder="Email"
+                  onChange={handleInputLoginChange}
+                />
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  onChange={handleInputLoginChange}
+                />
                 <a href="#">Forgot your password?</a>
-                <button type="submit">Sign In</button>
+
+                <button type="submit" className="button-signIn">
+                  Sign In
+                </button>
               </form>
             </div>
             <div className="toggle-container">
               <div className="toggle">
                 <div className="toggle-panel toggle-left">
                   <h1>Already an user? </h1>
-                  <p>Jump in to the greates shows by signing in!</p>
+                  <p>Jump in to the greatest shows by signing in!</p>
                   <button
                     className="hidden"
                     id="login"
@@ -249,7 +259,9 @@ export function SignIn() {
                 </div>
                 <div className="toggle-panel toggle-right">
                   <h1>New here?</h1>
-                  <p>Enroll into TicketHub for hottest concerts near!</p>
+                  <p>
+                    Enroll into TicketHub for the hottest concerts near you!
+                  </p>
                   <button
                     className="hidden"
                     id="register"
@@ -263,6 +275,28 @@ export function SignIn() {
           </div>
         </Col>
       </Container>
+
+      {/* Modal para previsualización de la selfie */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Selfie Preview</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <img
+            src={previewSrc}
+            alt="Selfie Preview"
+            className="selfie-preview-modal"
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleRetakeSelfie}>
+            Retake
+          </Button>
+          <Button variant="primary" onClick={handleSaveSelfie}>
+            Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

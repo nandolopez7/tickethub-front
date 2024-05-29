@@ -1,0 +1,36 @@
+.container-about {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 87.9vh;
+}
+
+.row-about {
+    padding: 200px;
+}
+
+
+.card-about {
+    border: none;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 992px) {
+    .row-about {
+        padding: 100px;
+    }
+    .container-about {
+        height: 100vh;
+    }
+  }
+  
+  /* Media query para pantallas pequeñas */
+  @media (max-width: 768px) {
+    .row-about {
+        padding: 50px;
+    }
+    .container-about {
+        height: 100vh;
+    }
+  }
+  

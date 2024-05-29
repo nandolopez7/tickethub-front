@@ -12,7 +12,7 @@ export function NavbarInitialComponent() {
 
   return (
     <>
-      <Navbar collapseOnSelect expand="lg" className="gradient-bg">
+      <Navbar collapseOnSelect expand="lg" className="gradient-bg" sticky="top">
         <Container>
           <Navbar.Brand
             className="me-auto text-navbar"

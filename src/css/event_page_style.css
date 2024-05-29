@@ -1,0 +1,50 @@
+.row-events {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 50px;
+  }
+  
+  .card-event {
+    display: flex;
+    flex-direction: row;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+  }
+  
+  .card-event:hover {
+    transform: translateY(-20px) scale(1.03);
+  }
+  
+  .info-event {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .content-event {
+    padding: 30px;
+  }
+  
+  .img-event {
+    height: auto;
+    width: 200px;
+    border-radius: 20px 0 0 20px;
+  }
+  
+  @media (max-width: 768px) {
+    .card-event {
+      flex-direction: column; /* Cambiar a dirección de columna en pantallas pequeñas */
+    }
+  
+    .img-event {
+      width: 100%; /* Ajustar el ancho de la imagen al 100% en pantallas pequeñas */
+      border-radius: 20px 20px 0 0; /* Ajustar los radios de la esquina superior de la imagen */
+    }
+  
+    .content-event {
+      padding: 20px; /* Reducir el relleno en pantallas pequeñas */
+    }
+  }
+  
