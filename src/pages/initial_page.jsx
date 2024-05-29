@@ -93,13 +93,13 @@ export function InitialPage() {
         }}
       >
         <Row className="row-events-init">
-          <h2>Discover the Best Events</h2>
+          <h2>Hot stuff at your hand!</h2>
           <p>
             TicketHub is your one-stop destination for finding the hottest music
             events, concerts, shows, and more. Explore our curated selection and
             get your tickets today.
           </p>
-          <Col xs={12} md={10} lg={8} xl={6} xxl={4}>
+          <Col xs={12} md={10} lg={8} xl={6} xxl={4} className="col-init">
             <Card className="card-init">
               <Card.Img variant="top" src="events/Festivales.jpg" />
               <Card.Body>
@@ -110,7 +110,7 @@ export function InitialPage() {
               </Card.Body>
             </Card>
           </Col>
-          <Col xs={12} md={10} lg={8} xl={6} xxl={4}>
+          <Col xs={12} md={10} lg={8} xl={6} xxl={4} className="col-init">
             <Card className="card-init">
               <Card.Img variant="top" src="events/Conciertos.jpg" />
               <Card.Body>
@@ -121,7 +121,7 @@ export function InitialPage() {
               </Card.Body>
             </Card>
           </Col>
-          <Col xs={12} md={10} lg={8} xl={6} xxl={4}>
+          <Col xs={12} md={10} lg={8} xl={6} xxl={4} className="col-init">
             <Card className="card-init">
               <Card.Img variant="top" src="events/Comedia.jpg" />
               <Card.Body>
@@ -130,7 +130,7 @@ export function InitialPage() {
               </Card.Body>
             </Card>
           </Col>
-          <Col xs={12} md={10} lg={8} xl={6} xxl={4}>
+          <Col xs={12} md={10} lg={8} xl={6} xxl={4} className="col-init">
             <Card className="card-init">
               <Card.Img variant="top" src="events/Deportes.jpg" />
               <Card.Body>
@@ -139,7 +139,7 @@ export function InitialPage() {
               </Card.Body>
             </Card>
           </Col>
-          <Col xs={12} md={10} lg={8} xl={6} xxl={4}>
+          <Col xs={12} md={10} lg={8} xl={6} xxl={4} className="col-init">
             <Card className="card-init">
               <Card.Img variant="top" src="events/Familiares.jpg" />
               <Card.Body>
@@ -148,7 +148,7 @@ export function InitialPage() {
               </Card.Body>
             </Card>
           </Col>
-          <Col xs={12} md={10} lg={8} xl={6} xxl={4}>
+          <Col xs={12} md={10} lg={8} xl={6} xxl={4} className="col-init">
             <Card className="card-init">
               <Card.Img variant="top" src="events/Teatro.jpg" />
               <Card.Body>
@@ -182,9 +182,9 @@ export function InitialPage() {
           backgroundColor: "#eee9",
         }}
       >
-        <Row>
+        <Row className="text-center">
           <h2 style={{ marginTop: "20px" }}>Why Choose TicketHub?</h2>
-          <Col xs={12} md={10} lg={8} xl={6} xxl={4}>
+          <Col xs={12} md={10} lg={8} xl={6} xxl={4} className="col-init">
             <Card className="card-init">
               <Card.Body>
                 <FontAwesomeIcon
@@ -200,7 +200,7 @@ export function InitialPage() {
               </Card.Body>
             </Card>
           </Col>
-          <Col xs={12} md={10} lg={8} xl={6} xxl={4}>
+          <Col xs={12} md={10} lg={8} xl={6} xxl={4} className="col-init">
             <Card className="card-init">
               <Card.Body>
                 <FontAwesomeIcon
@@ -216,7 +216,7 @@ export function InitialPage() {
               </Card.Body>
             </Card>
           </Col>
-          <Col xs={12} md={10} lg={8} xl={6} xxl={4}>
+          <Col xs={12} md={10} lg={8} xl={6} xxl={4} className="col-init">
             <Card className="card-init">
               <Card.Body>
                 <FontAwesomeIcon

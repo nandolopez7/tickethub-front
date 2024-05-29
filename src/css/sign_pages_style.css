@@ -260,3 +260,76 @@
     border: 1px solid #6366F1;
     color: #fff;
 }
+
+@media (max-width: 768px) {
+  .col-sign {
+    padding: 60px; /* Reducir padding en pantallas pequeñas */
+  }
+
+  .sign-container {
+    width: 90%;
+    min-height: 100%;
+  }
+
+  .sign-container form {
+    padding: 0 20px; /* Reducir padding en los formularios */
+  }
+
+  .toggle-container {
+    display: none; /* Ocultar el contenedor de toggle en pantallas pequeñas */
+  }
+
+  .form-container.sign-up,
+  .form-container.sign-in {
+    width: 100%;
+    left: 0;
+    transform: translateX(0);
+    opacity: 1;
+    position: relative;
+    z-index: 1;
+    animation: none;
+  }
+
+  .sign-container.active .form-container.sign-up {
+    transform: translateX(0);
+  }
+
+  .register-buttons button {
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  .selfie-controls {
+    flex-direction: column; /* Apilar botones de selfie verticalmente */
+    align-items: center; /* Centrar horizontalmente */
+  }
+
+  .sign-container .button-selfie-control {
+    margin: 5px 0; /* Espacio entre botones de selfie */
+  }
+    .button-signIn {
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .col-sign {
+    padding: 30px; /* Aún más pequeño en pantallas muy pequeñas */
+  }
+
+  .sign-container {
+    border-radius: 20px;
+  }
+
+  .sign-container form {
+    padding: 0 10px; /* Reducir padding aún más en los formularios */
+  }
+
+  .selfie-preview {
+    width: 100px; /* Tamaño más pequeño para la preview de la selfie */
+    height: 100px;
+  }
+  .button-signIn {
+    margin-bottom: 15px;
+  }
+}

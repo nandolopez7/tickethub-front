@@ -4,6 +4,7 @@ import { Container, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import "../css/sign_pages_style.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
+
 export function SignIn() {
   const [isActive, setIsActive] = useState(false);
   const [previewSrc, setPreviewSrc] = useState(null);
@@ -130,7 +131,7 @@ export function SignIn() {
                 <input type="email" placeholder="Email" />
                 <input type="password" placeholder="Password" />
                 <a href="#">Forgot your password?</a>
-                <button type="button">Sign In</button>
+                <button type="button" className="button-signIn">Sign In</button>
               </form>
             </div>
             <div className="toggle-container">
@@ -162,6 +163,7 @@ export function SignIn() {
           </div>
         </Col>
       </Container>
+
     </>
   );
 }
