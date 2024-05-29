@@ -60,11 +60,14 @@
   cursor: pointer;
 }
 
-
+.col-init {
+  display: flex;
+  justify-content: center;
+}
 /* Media query para pantallas medianas */
 @media (max-width: 992px) {
   .carousel-style {
-    margin-right: 0; /* Anula el margen derecho en pantallas medianas */
+    margin-right: 0;
   }
   .padding-row {
     padding: 4rem; /* Anula el relleno en pantallas medianas */
@@ -82,7 +85,8 @@
 /* Media query para pantallas pequeñas */
 @media (max-width: 768px) {
   .carousel-style {
-    margin-right: 0; /* Anula el margen derecho en pantallas pequeñas */
+    margin-right: 0;
+    margin-bottom: 15px;
   }
   .padding-row {
     padding: 2rem; /* Anula el relleno en pantallas pequeñas */
