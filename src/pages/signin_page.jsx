@@ -8,6 +8,20 @@ import { faCamera } from "@fortawesome/free-solid-svg-icons";
 export function SignIn() {
   const [isActive, setIsActive] = useState(false);
   const [previewSrc, setPreviewSrc] = useState(null);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    identificationNumber: '',
+    email: '',
+    password: '',
+  });
+
+  const URL_BACKEND = 'http://127.0.0.1:8000'
+
+  const [formDataLogin, setFormDataLogin] = useState({
+    emaillogin: '',
+    password: '',
+  });
 
   const tooltipSelfie = (props) => (
     <Tooltip id="button-tooltip" {...props}>
@@ -45,12 +59,96 @@ export function SignIn() {
     setPreviewSrc(null);
   };
 
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleInputLoginChange = (event) => {
+    const { name, value } = event.target;
+    setFormDataLogin((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
   const handleSaveSelfie = () => {
     // Aquí puedes guardar la selfie, por ejemplo, enviándola a un servidor
     console.log("Selfie saved:", previewSrc);
   };
 
-  const handleRegisterClick = () => {
+  
+  const handleRegisterClick = async (event) => {
+    event.preventDefault();
+
+    const data = new FormData();
+    data.append('first_name', formData.firstName);
+    data.append('last_name', formData.lastName);
+    data.append('identification_number', formData.identificationNumber);
+    data.append('email', formData.email);
+    data.append('password', formData.password);
+
+    data.append('photo',previewSrc);
+
+    // Mostrar las entradas de FormData en la consola
+    for (let [key, value] of data.entries()) {
+      console.log(`${key}:`, value);
+    }
+
+    try {
+      const response = await fetch(`${URL_BACKEND}/users/`, {
+        method: 'POST',
+        body: data,
+      });
+
+      if (response.ok) {
+        console.log('User registered successfully.');
+        // Maneja la respuesta exitosa aquí
+      } else {
+        console.error('Failed to register user:', response.statusText);
+        // Maneja los errores aquí
+      }
+    } catch (error) {
+      console.error('Error registering user:', error);
+    }
+  };
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+
+    const data = new FormData();
+    data.append('email', formDataLogin.emaillogin);
+    data.append('password', formDataLogin.password);
+
+    // Mostrar las entradas de FormData en la consola
+    for (let [key, value] of data.entries()) {
+      console.log(`${key}:`, value);
+    }
+
+    try {
+      const response = await fetch(`${URL_BACKEND}/users/login/`, {
+        method: 'POST',
+        body: data,
+      });
+
+      if (response.ok) {
+        console.log('Login successfully.');
+        // Maneja la respuesta exitosa aquí
+      } else {
+        console.error('Failed to login user:', response.statusText);
+        // Maneja los errores aquí
+      }
+    } catch (error) {
+      console.error('Error login user:', error);
+    }
+  };
+
+
+  
+  const handleCreateClick = () => {
     setIsActive(true);
   };
 
@@ -68,13 +166,16 @@ export function SignIn() {
             id="container"
           >
             <div className="form-container sign-up">
-              <form>
+              <form onSubmit={handleRegisterClick}>
                 <h1>Create Account</h1>
-                <input type="text" placeholder="Name" />
-                <input type="email" placeholder="Email" />
-                <input type="password" placeholder="Password" />
+                <input type="text" name="firstName" placeholder="First name" onChange={handleInputChange} />
+                <input type="text" name="lastName" placeholder="Last name" onChange={handleInputChange} />
+                <input type="text" name="identificationNumber" placeholder="Identification number" onChange={handleInputChange} />
+                <input type="email" name="email" placeholder="Email" onChange={handleInputChange} />
+                <input type="password" name="password" placeholder="Password" onChange={handleInputChange} />
+
                 <div className="register-buttons">
-                  <button type="button">Sign Up</button>
+                  <button  type="submit"> Sign Up</button>
                   <div className="selfie-container">
                     {previewSrc ? (
                       <img
@@ -126,12 +227,13 @@ export function SignIn() {
               </form>
             </div>
             <div className="form-container sign-in">
-              <form>
+              <form onSubmit={handleLogin}>
                 <h1>Sign In</h1>
-                <input type="email" placeholder="Email" />
-                <input type="password" placeholder="Password" />
+                <input type="email" name="emaillogin" placeholder="Email" onChange={handleInputLoginChange} />
+                <input type="password" name= "password" placeholder="Password" onChange={handleInputLoginChange} />
                 <a href="#">Forgot your password?</a>
-                <button type="button" className="button-signIn">Sign In</button>
+                
+                <button type="submit" className="button-signIn">Sign In</button>
               </form>
             </div>
             <div className="toggle-container">
@@ -153,7 +255,7 @@ export function SignIn() {
                   <button
                     className="hidden"
                     id="register"
-                    onClick={handleRegisterClick}
+                    onClick={handleCreateClick}
                   >
                     Sign Up
                   </button>
