@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react';
 import { NavbarInitialComponent } from "../components/navbar_initial_component";
 import {
   Container,
@@ -13,7 +13,10 @@ import { CardEvent } from "../components/card_events_component";
 export function BrowseEvent() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [visibleEvents, setVisibleEvents] = useState(6); // Controla cuántos eventos se muestran
+  const URL_BACKEND = "http://127.0.0.1:8000";
+  const [eventsback, setEvents] = useState([]);
 
+  // eslint-disable-next-line
   const events = [
     {
       title: "Concierto de Cepeda",
@@ -103,13 +106,38 @@ export function BrowseEvent() {
   // Filtrar eventos según la categoría seleccionada
   const filteredEvents =
     selectedCategory === "All"
-      ? events
-      : events.filter((event) => event.category === selectedCategory);
+      ? eventsback
+      : eventsback.filter((event) => event.category === selectedCategory);
 
   // Mostrar más eventos
   const handleShowMore = () => {
     setVisibleEvents((prevVisibleEvents) => prevVisibleEvents + 6); // Muestra 6 eventos adicionales
   };
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch(`${URL_BACKEND}/events/`);
+        if (response.ok) {
+          const data = await response.json();
+          setEvents(data);
+        } else {
+          console.error("Failed:", response.statusText);
+          // Maneja los errores aquí
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchEvents();
+
+  }, []);
+
+  useEffect(() => {
+    console.log(eventsback);
+  }, [eventsback]);
+
 
   return (
     <>
@@ -158,20 +186,20 @@ export function BrowseEvent() {
               className="mb-4"
             >
               <CardEvent
-                title={event.title}
+                title={event.name}
                 date={event.date}
-                location={event.location}
+                location={event.place}
                 category={event.category}
-                imageUrl={event.imageUrl}
+                imageUrl={event.file_cover}
               />
             </Col>
           ))}
         </Row>
         {/* Botón "Cargar más" */}
         {visibleEvents < filteredEvents.length && (
-          <Row className="justify-content-center mt-3 text-center">
+          <Row className="mt-3 text-center">
             <Col>
-              <Button variant="dark" onClick={handleShowMore}>
+              <Button variant="dark" onClick={handleShowMore} style={{marginBottom:"20px"}}>
                 Cargar más
               </Button>
             </Col>

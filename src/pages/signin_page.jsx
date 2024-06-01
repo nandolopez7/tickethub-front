@@ -1,5 +1,6 @@
 import { NavbarInitialComponent } from "../components/navbar_initial_component";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Col,
@@ -13,6 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
 
 export function SignIn() {
+  const navigate = useNavigate();
   const [isActive, setIsActive] = useState(false);
   const [previewSrc, setPreviewSrc] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -110,7 +112,7 @@ export function SignIn() {
 
       if (response.ok) {
         console.log("User registered successfully.");
-        // Maneja la respuesta exitosa aquí
+        navigate("/user");
       } else {
         console.error("Failed to register user:", response.statusText);
         // Maneja los errores aquí
@@ -135,6 +137,7 @@ export function SignIn() {
 
       if (response.ok) {
         console.log("Login successfully.");
+        navigate("/user");
         // Maneja la respuesta exitosa aquí
       } else {
         console.error("Failed to login user:", response.statusText);
@@ -237,6 +240,7 @@ export function SignIn() {
                   placeholder="Password"
                   onChange={handleInputLoginChange}
                 />
+                {/*eslint-disable-next-line*/}
                 <a href="#">Forgot your password?</a>
 
                 <button type="submit" className="button-signIn">
