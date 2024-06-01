@@ -10,6 +10,7 @@ import {
   Card,
 } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router-dom";
 import {
   faCalendar,
   faTicket,
@@ -17,6 +18,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "../css/initial_page_style.css";
 export function InitialPage() {
+  const navigate = useNavigate();
+
+  const handleEventClick = () => {
+    navigate("/browse-event");
+  };
+
   return (
     <>
       <NavbarInitialComponent />
@@ -35,7 +42,7 @@ export function InitialPage() {
               Find and buy tickets for the hottest concerts, festivals, and
               more.
             </h5>
-            <Button variant="light" className="custom-button">
+            <Button variant="light" className="custom-button" onClick={handleEventClick}>
               Find tickets
             </Button>
           </Col>

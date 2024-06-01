@@ -16,6 +16,7 @@ export function BrowseEvent() {
   const URL_BACKEND = "http://127.0.0.1:8000";
   const [eventsback, setEvents] = useState([]);
 
+  // eslint-disable-next-line
   const events = [
     {
       title: "Concierto de Cepeda",
@@ -196,9 +197,9 @@ export function BrowseEvent() {
         </Row>
         {/* Botón "Cargar más" */}
         {visibleEvents < filteredEvents.length && (
-          <Row className="justify-content-center mt-3 text-center">
+          <Row className="mt-3 text-center">
             <Col>
-              <Button variant="dark" onClick={handleShowMore}>
+              <Button variant="dark" onClick={handleShowMore} style={{marginBottom:"20px"}}>
                 Cargar más
               </Button>
             </Col>
