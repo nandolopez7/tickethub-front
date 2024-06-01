@@ -1,0 +1,33 @@
+.contact-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    height: 87.9vh;
+  }
+  
+  .contact-card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border: none;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #fff;
+  }
+  
+  .contact-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  @media (max-width: 768px) {
+    .contact-card {
+      padding: 10px;
+    }
+  
+    .contact-image {
+      margin-top: 20px;
+    }
+  }
+  
