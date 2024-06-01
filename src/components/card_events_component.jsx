@@ -6,7 +6,7 @@ export function CardEvent({ title, date, location, category, imageUrl }) {
     <div className="card-event">
       <img className="img-event" src={imageUrl} alt={title} />
       <div className="content-event">
-        <h2>{title}</h2>
+        <h6>{title}</h6>
         <div className="info-event">
           <span>{date}</span>
           <span>|</span>
