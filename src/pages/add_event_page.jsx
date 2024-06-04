@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SidebarUser } from "../components/sidebar_user_component";
+import { SidebarAdmin } from "../components/sidebar_admin_component";
 import { Container, Row } from "react-bootstrap";
 import styled from "styled-components";
 
@@ -9,16 +9,16 @@ const MainContent = styled.div`
   padding: 20px;
 `;
 
-export function UserProfile() {
+export function AddEvent() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <>
       <Container fluid>
-        <SidebarUser isOpen={isSidebarOpen} onToggle={setIsSidebarOpen} />
+        <SidebarAdmin isOpen={isSidebarOpen} onToggle={setIsSidebarOpen} />
         <MainContent isOpen={isSidebarOpen}>
           <Row>
-            <h1>Hola</h1>
+            <h1>Add</h1>
           </Row>
         </MainContent>
       </Container>

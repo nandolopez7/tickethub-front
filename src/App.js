@@ -5,8 +5,10 @@ import {BrowseEvent} from "./pages/browse-event_page";
 import {Contact} from "./pages/contact_page";
 import {About} from "./pages/about_page";
 import {SignIn} from "./pages/signin_page";
-import { UserEvents } from './pages/user_page'; 
+import { UserProfile } from './pages/user_page'; 
+import { UserEvent } from './pages/events_user_page.jsx'; 
 import { UserAdmin } from './pages/admin_page.jsx';
+import { AddEvent } from './pages/add_event_page.jsx';
 
 
 /**Como crear rutas  
@@ -25,8 +27,10 @@ function App() {
       <Route path="/contact" element={<Contact />} />
       <Route path="/about" element={<About />} />
       <Route path="/sign-in" element={<SignIn />} />
-      <Route path="/user" element={<UserEvents />} />
+      <Route path="/user" element={<UserProfile />} />
+      <Route path="/buy-event" element={<UserEvent />} />
       <Route path="/admin" element={<UserAdmin />} />
+      <Route path="/add-event" element={<AddEvent />} />
     </Routes>
 
   </BrowserRouter>
