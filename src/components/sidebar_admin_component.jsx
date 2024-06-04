@@ -49,7 +49,7 @@ const MenuItem = styled.li`
 `;
 
 export function SidebarAdmin({ onToggle, isOpen }) {
-  const [activeItem, setActiveItem] = useState("profile");
+  const [activeItem, setActiveItem] = useState("admin");
   const navigate = useNavigate();
   const location = useLocation();
 
