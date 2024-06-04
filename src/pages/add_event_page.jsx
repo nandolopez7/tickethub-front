@@ -4,9 +4,14 @@ import { Container, Row } from "react-bootstrap";
 import styled from "styled-components";
 
 const MainContent = styled.div`
-  margin-left: ${({ isOpen }) => (isOpen ? "280px" : "25px")};
-  transition: margin-left 0.3s ease-in-out;
   padding: 20px;
+  transition: margin-left 0.3s ease-in-out;
+  @media (min-width: 768px) {
+    margin-left: ${({ isOpen }) => (isOpen ? "280px" : "25px")};
+  }
+  @media (max-width: 767px) {
+    margin-left: ${({ isOpen }) => (isOpen ? "0" : "25px")};
+  }
 `;
 
 export function AddEvent() {
