@@ -146,11 +146,13 @@ export function UserAdmin() {
     const user_photo = verificationPhoto
     const event= selectedEventId;
 
+    const URL_BACKEND = "http://127.0.0.1:8000";
+
     
     //axios;
     api
       .post(
-        "/events/validate_user_entry/",
+        `${URL_BACKEND}/events/validate_user_entry/`,
         { event, user_photo },
         { headers }
       )
