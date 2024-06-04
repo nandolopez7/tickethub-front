@@ -9,7 +9,7 @@ const MainContent = styled.div`
   padding: 20px;
 `;
 
-export function UserProfile() {
+export function UserEvent() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
@@ -18,7 +18,7 @@ export function UserProfile() {
         <SidebarUser isOpen={isSidebarOpen} onToggle={setIsSidebarOpen} />
         <MainContent isOpen={isSidebarOpen}>
           <Row>
-            <h1>Hola</h1>
+            <h1>Compra</h1>
           </Row>
         </MainContent>
       </Container>
