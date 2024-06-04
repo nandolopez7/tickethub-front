@@ -1,5 +1,5 @@
 import { NavbarInitialComponent } from "../components/navbar_initial_component";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -26,6 +26,12 @@ export function SignIn() {
     password: "",
   });
 
+  const [cameraPermissionGranted, setCameraPermissionGranted] = useState(false);
+  const [cameraActive, setCameraActive] = useState(false);
+  const [stream, setStream] = useState(null);
+  const [capturedPhoto, setCapturedPhoto] = useState(null);
+  const [photoTaken, setPhotoTaken] = useState(false);
+
   const URL_BACKEND = "http://127.0.0.1:8000";
 
   const [formDataLogin, setFormDataLogin] = useState({
@@ -40,35 +46,66 @@ export function SignIn() {
     </Tooltip>
   );
 
-  const handleTakeSelfie = async () => {
+  const openCamera = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      const video = document.createElement("video");
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
-
-      video.srcObject = stream;
-      video.play();
-
-      video.onloadedmetadata = () => {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        const dataURL = canvas.toDataURL("image/jpeg");
-        setPreviewSrc(dataURL);
-
-        video.srcObject.getTracks().forEach((track) => track.stop());
-        setShowModal(true); // Mostrar el modal con la previsualización
-      };
+      if (!cameraPermissionGranted) {
+        const mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+        });
+        setStream(mediaStream);
+        setCameraPermissionGranted(true);
+      }
+      setCameraActive(true);
     } catch (error) {
       console.error("Error accessing camera:", error);
     }
   };
+  
+
+  const takePhoto = () => {
+    const video = document.getElementById("camera-preview");
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+    canvas.toBlob((blob) => {
+      const imageFile = new File([blob], "photo.png", { type: "image/png" });
+      setCapturedPhoto(imageFile);
+      setPhotoTaken(true);
+      setCameraActive(false); // Stop the camera after taking the photo
+      // Update the preview source
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewSrc(reader.result);
+      };
+      reader.readAsDataURL(imageFile);
+    }, "image/png");
+  };
+
+  const handleTakeSelfie = async () => {
+    await openCamera();
+    setShowModal(true);
+  };
+
+  useEffect(() => {
+    if (cameraActive && stream) {
+      const video = document.getElementById("camera-preview");
+      video.srcObject = stream;
+      video.play();
+    } else if (!cameraActive && stream) {
+      stream.getTracks().forEach((track) => track.stop());
+      setStream(null);
+    }
+  }, [cameraActive, stream]);
 
   const handleRetakeSelfie = () => {
+/*     setCapturedPhoto(null);
+    setPhotoTaken(false);
     setPreviewSrc(null);
-    setShowModal(false); // Cerrar el modal
+    setShowModal(false);
+    setCameraActive(true); // Cambio a true para activar la cámara nuevamente
+ */
+    openCamera()
   };
 
   const handleInputChange = (event) => {
@@ -88,9 +125,8 @@ export function SignIn() {
   };
 
   const handleSaveSelfie = () => {
-    // Aquí puedes guardar la selfie, por ejemplo, enviándola a un servidor
     console.log("Selfie saved:", previewSrc);
-    setShowModal(false); // Cerrar el modal después de guardar
+    setShowModal(false);
   };
 
   const handleRegisterClick = async (event) => {
@@ -102,7 +138,7 @@ export function SignIn() {
     data.append("identification_number", formData.identificationNumber);
     data.append("email", formData.email);
     data.append("password", formData.password);
-    data.append("photo", previewSrc);
+    data.append("photo", capturedPhoto);
 
     try {
       const response = await fetch(`${URL_BACKEND}/users/`, {
@@ -115,7 +151,6 @@ export function SignIn() {
         navigate("/user");
       } else {
         console.error("Failed to register user:", response.statusText);
-        // Maneja los errores aquí
       }
     } catch (error) {
       console.error("Error registering user:", error);
@@ -138,10 +173,8 @@ export function SignIn() {
       if (response.ok) {
         console.log("Login successfully.");
         navigate("/user");
-        // Maneja la respuesta exitosa aquí
       } else {
         console.error("Failed to login user:", response.statusText);
-        // Maneja los errores aquí
       }
     } catch (error) {
       console.error("Error login user:", error);
@@ -283,22 +316,39 @@ export function SignIn() {
       {/* Modal para previsualización de la selfie */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Selfie Preview</Modal.Title>
+          <Modal.Title>Take a Selfie</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <img
-            src={previewSrc}
-            alt="Selfie Preview"
-            className="selfie-preview-modal"
-          />
+          {cameraActive ? (
+            <div>
+              <video id="camera-preview" style={{ width: "100%" }}></video>
+              <Button variant="primary" onClick={takePhoto}>
+                Take Photo
+              </Button>
+            </div>
+          ) : (
+            <img
+              src={previewSrc}
+              alt="Selfie Preview"
+              className="selfie-preview-modal"
+            />
+          )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleRetakeSelfie}>
-            Retake
-          </Button>
-          <Button variant="primary" onClick={handleSaveSelfie}>
-            Save
-          </Button>
+          {photoTaken ? (
+            <>
+              <Button variant="secondary" onClick={handleRetakeSelfie}>
+                Retake
+              </Button>
+              <Button variant="primary" onClick={handleSaveSelfie}>
+                Save
+              </Button>
+            </>
+          ) : (
+            <Button variant="secondary" onClick={() => setShowModal(false)}>
+              Close
+            </Button>
+          )}
         </Modal.Footer>
       </Modal>
     </>
