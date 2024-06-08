@@ -253,6 +253,11 @@
   color: #fff;
 }
 
+.error-api {
+  font-size: 9px; 
+  color: red;
+}
+
 @media (max-width: 768px) {
   .col-sign {
     padding: 60px; /* Reducir padding en pantallas pequeñas */
