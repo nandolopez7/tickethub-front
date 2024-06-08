@@ -262,6 +262,7 @@ export function UserAdmin() {
                     location={event.place}
                     category={event.category}
                     imageUrl={event.file_cover}
+                    price={event.price}
                   />
                   <Button
                     style={{
