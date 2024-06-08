@@ -9,6 +9,7 @@ import {
   Modal,
   Button,
 } from "react-bootstrap";
+import Swal from "sweetalert2";
 import "../css/sign_pages_style.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
@@ -25,6 +26,7 @@ export function SignIn() {
     email: "",
     password: "",
   });
+  const [errors, setErrors] = useState({}); // Estado para almacenar errores
 
   const [cameraPermissionGranted, setCameraPermissionGranted] = useState(false);
   const [cameraActive, setCameraActive] = useState(false);
@@ -150,7 +152,16 @@ export function SignIn() {
         console.log("User registered successfully.");
         navigate("/user");
       } else {
-        console.error("Failed to register user:", response.statusText);
+        const errorData = await response.json();
+        if ("detail" in errorData) {
+          Swal.fire({
+            icon: "warning",
+            title: "Oops...",
+            text: errorData.detail[0],
+          });
+        } else {
+          setErrors(errorData); // Guardar los errores en el estado
+        }
       }
     } catch (error) {
       console.error("Error registering user:", error);
@@ -174,7 +185,12 @@ export function SignIn() {
         console.log("Login successfully.");
         navigate("/user");
       } else {
-        console.error("Failed to login user:", response.statusText);
+        console.error("Failed to login user:", response);
+        Swal.fire({
+          icon: "warning",
+          title: "Oops...",
+          text: "Invalid credentials",
+        });
       }
     } catch (error) {
       console.error("Error login user:", error);
@@ -206,32 +222,41 @@ export function SignIn() {
                   name="firstName"
                   placeholder="First name"
                   onChange={handleInputChange}
+                  required
                 />
+                {errors.firstName && <div className="error-api">{errors.firstName[0]}</div>} 
                 <input
                   type="text"
                   name="lastName"
                   placeholder="Last name"
                   onChange={handleInputChange}
+                  required
                 />
+                {errors.lastName && <div className="error-api">{errors.lastName[0]}</div>}
                 <input
                   type="text"
                   name="identificationNumber"
                   placeholder="Identification number"
                   onChange={handleInputChange}
+                  required
                 />
+                {errors.identification_number && <div className="error-api">{errors.identification_number[0]}</div>}
                 <input
                   type="email"
                   name="email"
                   placeholder="Email"
                   onChange={handleInputChange}
+                  required
                 />
+                {errors.email && <div className="error-api">{errors.email[0]}</div>}
                 <input
                   type="password"
                   name="password"
                   placeholder="Password"
                   onChange={handleInputChange}
+                  required
                 />
-
+                {errors.password && <div className="error-api">{errors.password[0]}</div>}
                 <div className="register-buttons">
                   <button type="submit"> Sign Up</button>
                   <div className="selfie-container">
@@ -256,6 +281,7 @@ export function SignIn() {
                     </OverlayTrigger>
                   </div>
                 </div>
+                {errors.photo && <div className="error-api">{errors.photo[0]}</div>}
               </form>
             </div>
             <div className="form-container sign-in">
@@ -266,12 +292,14 @@ export function SignIn() {
                   name="emaillogin"
                   placeholder="Email"
                   onChange={handleInputLoginChange}
+                  required
                 />
                 <input
                   type="password"
                   name="password"
                   placeholder="Password"
                   onChange={handleInputLoginChange}
+                  required
                 />
                 {/*eslint-disable-next-line*/}
                 <a href="#">Forgot your password?</a>
