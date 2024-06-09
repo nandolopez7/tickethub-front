@@ -104,6 +104,12 @@ export function SidebarUser({ onToggle, isOpen }) {
             Your events
           </MenuItem>
           <MenuItem
+            active={activeItem === "chat"}
+            onClick={() => handleItemClick("chat", "/chat")}
+          >
+            TicketChat
+          </MenuItem>
+          <MenuItem
             active={activeItem === "signout"}
             onClick={() => handleItemClick("signout", "/signout")}
           >

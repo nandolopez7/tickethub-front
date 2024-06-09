@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
+import { SidebarUser } from "../components/sidebar_user_component";
 import {
   MainContainer,
   ChatContainer,
@@ -8,17 +9,31 @@ import {
   MessageInput,
   TypingIndicator,
 } from "@chatscope/chat-ui-kit-react";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+import { Container, Button, Modal } from "react-bootstrap";
 import '../App.css';
+import "../css/chat_style.css";
 
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
+import styled from "styled-components";
+
+const MainContent = styled.div`
+  padding: 20px;
+  transition: margin-left 0.3s ease-in-out;
+  @media (min-width: 768px) {
+    margin-left: ${({ isOpen }) => (isOpen ? "280px" : "25px")};
+  }
+  @media (max-width: 767px) {
+    margin-left: ${({ isOpen }) => (isOpen ? "0" : "60px")};
+  }
+`;
 
 /* Aqu va la API KEY */
-API_KEY = "x"
+
+const API_KEY = "x";
 
 export function ChatBot() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -198,49 +213,56 @@ export function ChatBot() {
 
   return (
     <>
-      <div
-        style={{
-          position: "relative",
-          margin: "0 auto",
-          marginTop: "1em",
-          maxWidth: "100%",
-          height: "700px",
-          width: "70vw", // Porcentaje del ancho de la ventana
-          overflowX: "hidden", // Para evitar que el contenido se desborde en pantallas pequeñas
-        }}
-        ref={chatRef}
+      <Container
+        fluid
       >
-        <MainContainer
-          style={{
-            borderRadius: "10px",
-          }}
-        >
-          <ChatContainer>
-          <MessageList
-            typingIndicator={
-                typing ? (
-                <TypingIndicator content="NutriChat está escribiendo" />
-                ) : null
-            }
+        <SidebarUser isOpen={isSidebarOpen} onToggle={setIsSidebarOpen} />
+        <MainContent isOpen={isSidebarOpen}>
+          <div
+            style={{
+              position: "relative",
+              margin: "0 auto",
+              marginTop: "1em",
+              maxWidth: "100%",
+              height: "700px",
+              width: "70vw", // Porcentaje del ancho de la ventana
+              overflowX: "hidden", // Para evitar que el contenido se desborde en pantallas pequeñas
+            }}
+            ref={chatRef}
+          >
+            <MainContainer
+              style={{
+                borderRadius: "10px",
+              }}
             >
-            {messages.map((message, i) => {
-                return (
-                <Message
-                    key={i}
-                    model={message}
-                    className={message.sender === "ChatGPT" ? "chat-gpt-message" : ""}
-                />
-                );
-            })}
-            </MessageList>
+              <ChatContainer>
+                <MessageList
+                  typingIndicator={
+                    typing ? (
+                      <TypingIndicator content="TicketChat está escribiendo" />
+                    ) : null
+                  }
+                >
+                  {messages.map((message, i) => {
+                    return (
+                      <Message
+                        key={i}
+                        model={message}
+                        className={message.sender === "ChatGPT" ? "chat-gpt-message" : ""}
+                      />
+                    );
+                  })}
+                </MessageList>
 
-            <MessageInput
-              placeholder="Escribe tu mensaje aquí"
-              onSend={handleSend}
-            />
-          </ChatContainer>
-        </MainContainer>
-      </div>
+                <MessageInput
+                  placeholder="Escribe tu mensaje aquí"
+                  onSend={handleSend}
+                />
+              </ChatContainer>
+            </MainContainer>
+          </div>
+        </MainContent>
+      </Container >
 
       <Button
         style={{ width: "20rem", marginTop: "1em" }}

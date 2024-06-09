@@ -1,0 +1,49 @@
+div .cs-message-list__typing-indicator-container div {
+    color: #9333EA;
+  }
+  
+  div .cs-main-container  {
+    border: 1px solid;
+  }
+  
+  div .cs-message--incoming .cs-message__content,
+  div .cs-chat-container .cs-message-input,
+  div .ps__thumb-y,
+  div .ps__rail-y:hover .ps__thumb-y,
+  div .ps__rail-y:active .ps__thumb-y {
+    background-color: #9333EA;
+  }
+  
+  div .cs-message-input__content-editor,
+  div .cs-message-input__content-editor-wrapper,
+  div .cs-message-list,
+  div .ps__rail-y:hover,
+  div .ps .ps__rail-y:hover,
+  div .ps__rail-y {
+    background-color: #ffffff;
+  }
+  
+  div .cs-message--outgoing .cs-message__content {
+    color: #ffffff;
+  }
+  
+  div .cs-typing-indicator__dot {
+    background-color: #9333EA;
+  }
+  
+  div .cs-message-list__typing-indicator-container {
+      background-color: #9333EA;
+  }
+  
+  
+  div .cs-message--outgoing .cs-message__content,
+  div .cs-chat-container .cs-message-input,
+  div .ps__thumb-y,
+  div .ps__rail-y:hover .ps__thumb-y,
+  div .ps__rail-y:active .ps__thumb-y {
+    background-color: #6366F1;
+  }
+  
+  div .cs-message__content {
+      background-color: #6366F1;
+  }
