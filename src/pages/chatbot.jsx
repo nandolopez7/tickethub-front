@@ -16,6 +16,7 @@ import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 
 /* Aqu va la API KEY */
+API_KEY = "x"
 
 export function ChatBot() {
   const [show, setShow] = useState(false);
