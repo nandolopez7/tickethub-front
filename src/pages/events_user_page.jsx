@@ -82,12 +82,12 @@ export function UserEvent() {
 
   const handleConfirmPurchase = () => {
     const number = parseInt(document.getElementById("formQuantity").value);
-    /* const cost = selectedEvent.price; */
-    const cost = 500;
+    const cost = selectedEvent.price;
+    /* const cost = 500; */
     const event = selectedEvent.id;
-    /* const assistant = sessionStorage.getItem("usuario_id");*/
+    const assistant = sessionStorage.getItem("user_id")
 
-    const assistant = 27;
+    /* const assistant = 27; */
     const name = document.getElementById("formName").value;
     const documentNumber = document.getElementById("formDocument").value;
     const totalPrice = cost * number;
@@ -163,7 +163,7 @@ export function UserEvent() {
 
   const handleQuantityChange = () => {
     const quantity = parseInt(document.getElementById("formQuantity").value);
-    const totalPrice = 500 * quantity;
+    const totalPrice = selectedEvent.price * quantity;
     document.getElementById("totalPrice").innerText = totalPrice;
   };
 
@@ -225,6 +225,7 @@ export function UserEvent() {
                   location={event.place}
                   category={event.category}
                   imageUrl={event.file_cover}
+                  price= {event.price}
                 />
 
                 <Button
@@ -293,7 +294,6 @@ export function UserEvent() {
               <Form.Control
                 type="number"
                 placeholder="Enter quantity"
-                onChange={handleQuantityChange}
               />
             </Form.Group>
             <Form.Group controlId="formName" className="mb-3">

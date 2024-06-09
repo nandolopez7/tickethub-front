@@ -20,10 +20,25 @@ export function UserProfile() {
 
   useEffect(() => {
     const data = localStorage.getItem("userData");
-    if (data) {
-      setUserData(JSON.parse(data));
-    }
+    const user_nombre = sessionStorage.getItem("user_nombre");
+    const user_apellido = sessionStorage.getItem("user_apellido");
+    const user_correo = sessionStorage.getItem("user_correo");
+    const user_foto = sessionStorage.getItem("user_foto");
+
+    let parsedData = data ? JSON.parse(data) : {};
+
+    // Agregar datos de sessionStorage al objeto userData
+    parsedData = {
+      ...parsedData,
+      nombre: user_nombre,
+      apellido: user_apellido,
+      correo: user_correo,
+      foto: user_foto,
+    };
+
+    setUserData(parsedData);
   }, []);
+
 
   return (
     <>
@@ -50,7 +65,7 @@ export function UserProfile() {
                   >
                     <Col xs={6} md={4}>
                       <Image
-                        src="/pruebas/olas.jpg"
+                        src={"/pruebas/olas.jpg"}
                         roundedCircle
                         style={{ width: "400px", height: "auto" }}
                       />
@@ -68,7 +83,11 @@ export function UserProfile() {
                         Email
                       </Form.Label>
                       <Col sm="10">
-                        <Form.Control plaintext readOnly defaultValue="email" />
+                        <Form.Control
+                          plaintext
+                          readOnly
+                          defaultValue={userData.correo || "email"}
+                        />
                       </Col>
                     </Form.Group>
                     <Form.Group
@@ -87,7 +106,7 @@ export function UserProfile() {
                         <Form.Control
                           plaintext
                           readOnly
-                          defaultValue="nombre"
+                          defaultValue={userData.nombre || "nombre"}
                         />
                       </Col>
                     </Form.Group>
@@ -107,14 +126,14 @@ export function UserProfile() {
                         <Form.Control
                           plaintext
                           readOnly
-                          defaultValue="apellido"
+                          defaultValue={userData.apellido || "apellido"}
                         />
                       </Col>
                     </Form.Group>
                   </Form>
                 </>
               ) : (
-                <h1>No user data found</h1>
+                <p>Loading...</p>
               )}
             </Col>
           </Row>
