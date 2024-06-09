@@ -306,18 +306,8 @@ export function BrowseEvent() {
                 location={event.place}
                 category={event.category}
                 imageUrl={event.file_cover}
-              />
-
-            <Button
-              variant="warning"
-              onClick={() => handleBuyTicketsClick(event)}
-              className="btn-sm"
-            >
-              Buy Tickets
-            </Button>
-              
-            </Col>
-            
+              />           
+            </Col>          
           ))}
         </Row>
         {/* Botón "Cargar más" */}
@@ -331,65 +321,6 @@ export function BrowseEvent() {
           </Row>
         )}
       </Container>
-      <Modal
-        show={selectedEvent !== null}
-        backdrop="static"
-        keyboard={false}
-        onHide={() => setSelectedEvent(null)}
-        size="xl"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>
-            <b>{selectedEvent && selectedEvent.name}</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {selectedEvent && (
-            <div>
-              <h5>
-                <b>Date:</b> {selectedEvent.date}
-              </h5>
-              <h5>
-                <b>Price:</b> ${selectedEvent.price}
-              </h5>
-              <img
-                src={selectedEvent.file_cover}
-                alt={selectedEvent.name}
-                style={{ width: "100%" }}
-              />
-            </div>
-          )}
-          <Form style={{ marginTop: "1rem" }}>
-            <Form.Group controlId="formQuantity" className="mb-3">
-              <Form.Label className="mb-2">Quantity</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Enter quantity"
-                onChange={handleQuantityChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="formName" className="mb-3">
-              <Form.Label className="mb-2">Name</Form.Label>
-              <Form.Control type="text" placeholder="Enter your name" />
-            </Form.Group>
-            <Form.Group controlId="formDocument" className="mb-3">
-              <Form.Label className="mb-2">Document Number</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter your document number"
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="dark"  onClick={handleCloseModal}>
-            Close
-          </Button>
-          <Button variant="warning" onClick={handleConfirmPurchase} >
-            Confirm Purchase
-          </Button>
-        </Modal.Footer>
-      </Modal>
 
     </>
 
