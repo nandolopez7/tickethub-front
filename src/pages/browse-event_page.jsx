@@ -23,97 +23,9 @@ export function BrowseEvent() {
   const [eventsback, setEvents] = useState([]);
   
 
-    const headers = {
+  const headers = {
     "Content-Type": "application/json",
   };
-
-
-  // eslint-disable-next-line
-  const events = [
-    {
-      title: "Concierto de Cepeda",
-      date: "24 de Junio, 2024",
-      location: "Madrid, España",
-      category: "Concierto",
-      imageUrl: "pruebas/cepeda.jpg",
-    },
-    {
-      title: "FerxxoCalipsis",
-      date: "15 de Julio, 2024",
-      location: "Barcelona, España",
-      category: "Concierto",
-      imageUrl: "pruebas/ferxxo.jpg",
-    },
-    {
-      title: "The Juanpis Live Show",
-      date: "1 de Agosto, 2024",
-      location: "Nueva Orleans, EE.UU.",
-      category: "Comedia",
-      imageUrl: "pruebas/juanpis.jpg",
-    },
-    {
-      title: "Festival Cordillera",
-      date: "12 de Septiembre, 2024",
-      location: "Bogotá, Colombia",
-      category: "Festival",
-      imageUrl: "pruebas/cordillera.jpg",
-    },
-    {
-      title: "Aurora",
-      date: "9 de Agosto, 2024",
-      location: "Bogotá, Colombia",
-      category: "Concierto",
-      imageUrl: "pruebas/aurora.jpg",
-    },
-    {
-      title: "Bañomaria",
-      date: "25 de Junio, 2024",
-      location: "Bogotá, Colombia",
-      category: "Concierto",
-      imageUrl: "pruebas/bañomaria.jpg",
-    },    {
-        title: "Corona Sunset",
-        date: "24 de Junio, 2024",
-        location: "Santa Marta, Colombia",
-        category: "Festival",
-        imageUrl: "pruebas/corona.jpg",
-      },
-      {
-        title: "Drunk Comedy",
-        date: "15 de Julio, 2024",
-        location: "Barcelona, España",
-        category: "Comedia",
-        imageUrl: "pruebas/drunk.jpg",
-      },
-      {
-        title: "Expo Gabo",
-        date: "1 de Agosto, 2024",
-        location: "Nueva Orleans, EE.UU.",
-        category: "Exposicion",
-        imageUrl: "pruebas/gabo.jpg",
-      },
-      {
-        title: "Millonarios F.C.",
-        date: "12 de Septiembre, 2024",
-        location: "Bogotá, Colombia",
-        category: "Deportes",
-        imageUrl: "pruebas/millos.png",
-      },
-      {
-        title: "Olas Sonoras",
-        date: "12 de Septiembre, 2024",
-        location: "Bogotá, Colombia",
-        category: "Festival",
-        imageUrl: "pruebas/olas.jpg",
-      },
-      {
-        title: "Vino al parque",
-        date: "12 de Septiembre, 2024",
-        location: "Bogotá, Colombia",
-        category: "Festival",
-        imageUrl: "pruebas/vino.jpg",
-      },
-  ];
 
   // Filtrar eventos según la categoría seleccionada
   const filteredEvents =
@@ -162,8 +74,7 @@ export function BrowseEvent() {
 
   const handleConfirmPurchase = () => {
     const number = parseInt(document.getElementById("formQuantity").value);
-    /* const cost = selectedEvent.price; */
-    const cost = 500;
+    const cost = selectedEvent.price;
     const event = selectedEvent.id;
     /* const assistant = sessionStorage.getItem("usuario_id");*/
 
@@ -244,8 +155,10 @@ export function BrowseEvent() {
 
   const handleQuantityChange = () => {
     const quantity = parseInt(document.getElementById("formQuantity").value);
-    const totalPrice = 500 * quantity;
+    const cost = selectedEvent.price;
+    const totalPrice = cost * quantity;
     document.getElementById("totalPrice").innerText = totalPrice;
+    document.getElementById("totalPrice").value = totalPrice;
   };
 
 
@@ -308,6 +221,19 @@ export function BrowseEvent() {
                 imageUrl={event.file_cover}
               />           
             </Col>          
+                price={event.price}
+              />
+
+            <Button
+              variant="warning"
+              onClick={() => handleBuyTicketsClick(event)}
+              className="btn-sm mt-1"
+            >
+              Buy Tickets
+            </Button>
+              
+            </Col>
+            
           ))}
         </Row>
         {/* Botón "Cargar más" */}
