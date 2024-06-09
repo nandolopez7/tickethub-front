@@ -5,16 +5,13 @@ import {
   Container,
   Row,
   Col,
-  Modal,
-  Form,
-  OverlayTrigger,
   Dropdown,
   DropdownButton,
   Button,
 } from "react-bootstrap";
 import { CardEvent } from "../components/card_events_component";
 import Swal from "sweetalert2";
-import { api } from "../api/api_base";
+
 
 export function BrowseEvent() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -221,19 +218,6 @@ export function BrowseEvent() {
                 imageUrl={event.file_cover}
               />           
             </Col>          
-                price={event.price}
-              />
-
-            <Button
-              variant="warning"
-              onClick={() => handleBuyTicketsClick(event)}
-              className="btn-sm mt-1"
-            >
-              Buy Tickets
-            </Button>
-              
-            </Col>
-            
           ))}
         </Row>
         {/* Botón "Cargar más" */}
