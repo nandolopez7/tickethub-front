@@ -28,9 +28,33 @@
   }
   
   .img-event {
-    height: 220px;
+    height: auto; 
+    flex: 1; 
     width: 265px;
     border-radius: 20px 0 0 20px;
+  }
+
+  .price-event {
+    display: inline-block; 
+    margin-top: 5px;
+    color: #ede1f9; 
+    font-weight: bold;
+    background: #999999;
+    padding-left: 6px; 
+    padding-right: 6px; 
+    border-radius: 200px;
+    text-align: center; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    transition: transform 0.3s, background-color 0.3s; 
+  }
+  
+  .price-event:hover {
+    transform: scale(1.1); 
+    background-color: #7c3aed;
+  }
+
+  .event-title {
+    text-transform: uppercase; /* Convierte el texto a mayúsculas */
   }
   
   @media (max-width: 768px) {
