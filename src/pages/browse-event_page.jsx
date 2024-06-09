@@ -5,16 +5,13 @@ import {
   Container,
   Row,
   Col,
-  Modal,
-  Form,
-  OverlayTrigger,
   Dropdown,
   DropdownButton,
   Button,
 } from "react-bootstrap";
 import { CardEvent } from "../components/card_events_component";
 import Swal from "sweetalert2";
-import { api } from "../api/api_base";
+
 
 export function BrowseEvent() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -219,19 +216,8 @@ export function BrowseEvent() {
                 location={event.place}
                 category={event.category}
                 imageUrl={event.file_cover}
-                price={event.price}
-              />
-
-            <Button
-              variant="warning"
-              onClick={() => handleBuyTicketsClick(event)}
-              className="btn-sm mt-1"
-            >
-              Buy Tickets
-            </Button>
-              
-            </Col>
-            
+              />           
+            </Col>          
           ))}
         </Row>
         {/* Botón "Cargar más" */}
@@ -245,78 +231,6 @@ export function BrowseEvent() {
           </Row>
         )}
       </Container>
-      <Modal
-        show={selectedEvent !== null}
-        backdrop="static"
-        keyboard={false}
-        onHide={() => setSelectedEvent(null)}
-        size="xl"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>
-            <b>{selectedEvent && selectedEvent.name}</b>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {selectedEvent && (
-            <div>
-              <img
-                src={selectedEvent.file_cover}
-                alt={selectedEvent.name}
-                style={{ width: "100%" }}
-              />
-            </div>
-          )}
-          {selectedEvent && (
-            <div>
-              <hr/>
-              <h5>
-                <b>Date:</b> {selectedEvent.date}
-              </h5>
-              <h5>
-                <b>Price:</b> ${selectedEvent.price}
-              </h5>
-            </div>
-          )}
-          <Form style={{ marginTop: "1rem" }}>
-            <Form.Group controlId="formName" className="mb-3">
-              <Form.Label className="mb-2">Name</Form.Label>
-              <Form.Control type="text" placeholder="Enter your name" />
-            </Form.Group>
-            <Form.Group controlId="formDocument" className="mb-3">
-              <Form.Label className="mb-2">Document Number</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter your document number"
-              />
-            </Form.Group>
-            <Form.Group controlId="formQuantity" className="mb-3">
-              <Form.Label className="mb-2">Quantity</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Enter quantity"
-                onChange={handleQuantityChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="totalPrice" className="mb-3">
-              <Form.Label className="mb-2">Total Price</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Total Price"
-                readOnly
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="dark"  onClick={handleCloseModal}>
-            Close
-          </Button>
-          <Button variant="warning" onClick={handleConfirmPurchase} >
-            Confirm Purchase
-          </Button>
-        </Modal.Footer>
-      </Modal>
 
     </>
 
