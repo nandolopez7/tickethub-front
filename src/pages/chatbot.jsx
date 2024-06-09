@@ -30,7 +30,7 @@ const MainContent = styled.div`
 
 /* Aqu va la API KEY */
 
-API_KEY = "x";
+const API_KEY = "x";
 
 export function ChatBot() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
