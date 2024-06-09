@@ -13,6 +13,16 @@
   }
 }
 
+/* En tu archivo de estilos CSS */
+.chat-gpt-message {
+  justify-content: flex-start;
+}
+
+.chat-gpt-message .message-wrapper {
+  background-color: #a14949;
+}
+
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

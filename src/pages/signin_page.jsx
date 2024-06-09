@@ -183,6 +183,18 @@ export function SignIn() {
 
       if (response.ok) {
         console.log("Login successfully.");
+        const responseData = await response.json(); // Espera a que la respuesta JSON se resuelva
+        sessionStorage.setItem("user_nombre", responseData.user.first_name);
+        sessionStorage.setItem("user_apellido", responseData.user.last_name);
+        sessionStorage.setItem("user_correo", responseData.user.email);
+        sessionStorage.setItem("user_foto", responseData.user.photo);
+        sessionStorage.setItem("user_id", responseData.user.id);
+
+        console.log(responseData.user)
+
+        const usuario = sessionStorage.getItem("user").first_name
+        console.log(usuario)
+
         navigate("/user");
       } else {
         console.error("Failed to login user:", response);
@@ -192,6 +204,7 @@ export function SignIn() {
           text: "Invalid credentials",
         });
       }
+      
     } catch (error) {
       console.error("Error login user:", error);
     }
