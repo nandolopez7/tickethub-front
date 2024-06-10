@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
+import { SidebarUser } from "../components/sidebar_user_component";
 import {
   MainContainer,
   ChatContainer,
@@ -8,16 +9,31 @@ import {
   MessageInput,
   TypingIndicator,
 } from "@chatscope/chat-ui-kit-react";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+import { Container, Button, Modal } from "react-bootstrap";
 import '../App.css';
+import "../css/chat_style.css";
 
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
+import styled from "styled-components";
 
-const API_KEY = "x";
+const MainContent = styled.div`
+  padding: 20px;
+  transition: margin-left 0.3s ease-in-out;
+  @media (min-width: 768px) {
+    margin-left: ${({ isOpen }) => (isOpen ? "280px" : "25px")};
+  }
+  @media (max-width: 767px) {
+    margin-left: ${({ isOpen }) => (isOpen ? "0" : "60px")};
+  }
+`;
+
+
+/* Aqu va la API KEY */
+const API_KEY = "x"
 
 export function ChatBot() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -387,49 +403,56 @@ export function ChatBot() {
 
   return (
     <>
-      <div
-        style={{
-          position: "relative",
-          margin: "0 auto",
-          marginTop: "1em",
-          maxWidth: "100%",
-          height: "700px",
-          width: "70vw", // Porcentaje del ancho de la ventana
-          overflowX: "hidden", // Para evitar que el contenido se desborde en pantallas pequeñas
-        }}
-        ref={chatRef}
+      <Container
+        fluid
       >
-        <MainContainer
-          style={{
-            borderRadius: "10px",
-          }}
-        >
-          <ChatContainer>
-          <MessageList
-            typingIndicator={
-                typing ? (
-                <TypingIndicator content="Tickethub está escribiendo" />
-                ) : null
-            }
+        <SidebarUser isOpen={isSidebarOpen} onToggle={setIsSidebarOpen} />
+        <MainContent isOpen={isSidebarOpen}>
+          <div
+            style={{
+              position: "relative",
+              margin: "0 auto",
+              marginTop: "1em",
+              maxWidth: "100%",
+              height: "700px",
+              width: "70vw", // Porcentaje del ancho de la ventana
+              overflowX: "hidden", // Para evitar que el contenido se desborde en pantallas pequeñas
+            }}
+            ref={chatRef}
+          >
+            <MainContainer
+              style={{
+                borderRadius: "10px",
+              }}
             >
-            {messages.map((message, i) => {
-                return (
-                <Message
-                    key={i}
-                    model={message}
-                    className={message.sender === "ChatGPT" ? "chat-gpt-message" : ""}
-                />
-                );
-            })}
-            </MessageList>
+              <ChatContainer>
+                <MessageList
+                  typingIndicator={
+                    typing ? (
+                      <TypingIndicator content="TicketChat está escribiendo" />
+                    ) : null
+                  }
+                >
+                  {messages.map((message, i) => {
+                    return (
+                      <Message
+                        key={i}
+                        model={message}
+                        className={message.sender === "ChatGPT" ? "chat-gpt-message" : ""}
+                      />
+                    );
+                  })}
+                </MessageList>
 
-            <MessageInput
-              placeholder="Escribe tu mensaje aquí"
-              onSend={handleSend}
-            />
-          </ChatContainer>
-        </MainContainer>
-      </div>
+                <MessageInput
+                  placeholder="Escribe tu mensaje aquí"
+                  onSend={handleSend}
+                />
+              </ChatContainer>
+            </MainContainer>
+          </div>
+        </MainContent>
+      </Container >
 
       <Button
         style={{ width: "20rem", marginTop: "1em" }}
@@ -448,7 +471,7 @@ export function ChatBot() {
       >
         <Modal.Header>
           <Modal.Title>
-            Condiciones de Uso del Chatbot:
+            Condiciones de Uso del Chatbot de Nutrición:
           </Modal.Title>
         </Modal.Header>
         <Modal.Body
@@ -456,16 +479,18 @@ export function ChatBot() {
             textAlign: "justify",
           }}
         >
-          Bienvenido/a al Chatbot de Tickethub. Antes de utilizar nuestros
+          Bienvenido/a al Chatbot de Nutrición. Antes de utilizar nuestros
           servicios, te pedimos que leas detenidamente las siguientes
           condiciones.
           <br />
           Al acceder y utilizar este chatbot, aceptas cumplir con los términos
           establecidos a continuación:
           <br />
-          <b>Propósito Informativo:</b> El chatbot de eventos proporciona
-          información general sobre temas relacionados a eventos y entretenimiento.
-          La información proporcionada no es un asesor.
+          <b>Propósito Informativo:</b> El chatbot de nutrición proporciona
+          información general sobre temas relacionados con la nutrición y el
+          bienestar. La información proporcionada no sustituye el consejo
+          profesional individualizado y está destinada únicamente con fines
+          informativos.
           <br />
           <b>Variedad de Usuarios:</b> Reconocemos que cada persona es única, y
           la información proporcionada por el chatbot puede no ser aplicable a
@@ -473,11 +498,22 @@ export function ChatBot() {
           basa en datos generales y no tiene en cuenta circunstancias personales
           específicas.
           <br />
+          <b>Consulta Profesional:</b> Se recomienda encarecidamente que
+          consultes con un profesional de la salud, como un nutricionista o
+          médico, antes de realizar cambios significativos en tu dieta o estilo
+          de vida. El chatbot no puede reemplazar la evaluación personalizada de
+          un profesional de la salud.
+          <br />
           <b>Limitaciones Tecnológicas:</b> El chatbot utiliza inteligencia
           artificial para proporcionar respuestas, y aunque se esfuerza por
           ofrecer información precisa y actualizada, puede haber limitaciones en
           su capacidad para comprender situaciones complejas o proporcionar
           respuestas específicas en todos los casos.
+          <br />
+          <b>Confidencialidad:</b> La información proporcionada en el chatbot se
+          maneja de manera confidencial, según nuestra política de privacidad.
+          Sin embargo, ten en cuenta que la seguridad de la información a través
+          de internet no puede garantizarse al 100%.
           <br />
           <b>Responsabilidad del Usuario:</b> El usuario asume la
           responsabilidad de cualquier acción que realice como resultado de la
@@ -485,7 +521,11 @@ export function ChatBot() {
           creadores serán responsables de cualquier consecuencia derivada de las
           decisiones tomadas basándose en la información proporcionada.
           <br />
-          Al utilizar este chatbot, aceptas estas condiciones de uso. ¡Gracias por utilizar nuestro Chatbot!
+          Al utilizar este chatbot, aceptas estas condiciones de uso. Si no
+          estás de acuerdo con alguna parte de estas condiciones, te
+          recomendamos que no utilices el servicio. Estas condiciones pueden
+          actualizarse ocasionalmente, y te recomendamos que las revises
+          periódicamente. ¡Gracias por utilizar nuestro Chatbot de Nutrición!
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={handleClose}>

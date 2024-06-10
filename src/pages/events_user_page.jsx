@@ -72,6 +72,7 @@ export function UserEvent() {
   }, [eventsback]);
 
   const [selectedEvent, setSelectedEvent] = useState(null);
+    //eslint-disable-next-line
   const [selectedEventId, setSelectedEventId] = useState(null);
 
   const handleBuyTicketsClick = (eventData) => {
@@ -122,7 +123,7 @@ export function UserEvent() {
         console.log(response.data.id);
         console.log(response.data.valid);
         // Cuando la solicitud es exitosa
-        if (response.status == 201) {
+        if (response.status === 201) {
           setSelectedEvent(null);
 
           Swal.fire({
@@ -160,7 +161,7 @@ export function UserEvent() {
         });
       });
   };
-
+  //eslint-disable-next-line
   const handleQuantityChange = () => {
     const quantity = parseInt(document.getElementById("formQuantity").value);
     const totalPrice = selectedEvent.price * quantity;
@@ -178,7 +179,7 @@ export function UserEvent() {
         <MainContent isOpen={isSidebarOpen}>
           <Row className="mt-3 text-center">
             <Col>
-              <h1>Browse all available events</h1>
+              <h1>Browse all available events to purchase</h1>
               <DropdownButton
                 variant="outline-dark"
                 id="dropdown-basic-button"

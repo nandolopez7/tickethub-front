@@ -1,19 +1,14 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+
 import { SidebarUser } from "../components/sidebar_user_component";
 import {
   Container,
   Row,
   Col,
-  Modal,
-  Form,
-  Dropdown,
-  DropdownButton,
-  Button,
 } from "react-bootstrap";
 import { CardEvent } from "../components/card_events_component";
 import styled from "styled-components";
-import Swal from "sweetalert2";
+
 
 const MainContent = styled.div`
   padding: 20px;
@@ -27,10 +22,13 @@ const MainContent = styled.div`
 `;
 export function MyEvents() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  //eslint-disable-next-line
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [visibleEvents, setVisibleEvents] = useState([]);
   const [eventsback, setEvents] = useState([]);
+  //eslint-disable-next-line
   const [selectedEvent, setSelectedEvent] = useState(null);
+  //eslint-disable-next-line
   const [selectedEventId, setSelectedEventId] = useState(null);
   const URL_BACKEND = "http://127.0.0.1:8000";
   
@@ -67,11 +65,11 @@ export function MyEvents() {
   useEffect(() => {
     console.log(eventsback);
   }, [eventsback]);
-
+  //eslint-disable-next-line
   const handleShowMore = () => {
     setVisibleEvents((prevVisibleEvents) => prevVisibleEvents + 6);
   };
-
+  //eslint-disable-next-line
   const handleCloseModal = () => {
     setSelectedEvent(null);
   };
@@ -81,8 +79,14 @@ export function MyEvents() {
       <Container fluid>
         <SidebarUser isOpen={isSidebarOpen} onToggle={setIsSidebarOpen} />
         <MainContent isOpen={isSidebarOpen}>
+        <Row className="mt-3 text-center">
+            <Col>
+              <h1>Events that you own</h1>
+            </Col>
+          </Row>
           <Row className="row-events">
             {visibleEvents.map((event, index) => (
+
               <Col
                 key={index}
                 xs={12}
