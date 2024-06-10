@@ -28,9 +28,9 @@ const MainContent = styled.div`
   }
 `;
 
-/* Aqu va la API KEY */
 
-const API_KEY = "x";
+/* Aqu va la API KEY */
+const API_KEY = "x"
 
 export function ChatBot() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -42,10 +42,38 @@ export function ChatBot() {
   const [typing, setTyping] = useState(false);
   const [messages, setMessages] = useState([
     {
-      message: "Hola, bienvenido a NutriChat, ¿me podrias dar tu nombre?",
+      message: "Hola, bienvenido a Tickethub chatbot, ¿me podrias dar tu nombre?",
       sender: "ChatGPT",
     },
   ]);
+
+  const [visibleEvents, setVisibleEvents] = useState([]);
+  const [eventsback, setEvents] = useState([]);
+  const URL_BACKEND = "http://127.0.0.1:8000";
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch(`${URL_BACKEND}/events/`);
+        if (response.ok) {
+          const data = await response.json();
+          setEvents(data);
+          setVisibleEvents(data);
+        } else {
+          console.error("Failed:", response.statusText);
+          // Maneja los errores aquí
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  useEffect(() => {
+    console.log(eventsback);
+  }, [eventsback]);
 
   const chatRef = useRef(); // Agrega esta línea para referenciar el contenedor del chat
 
@@ -96,24 +124,210 @@ export function ChatBot() {
     handleShow();
   }, []);
 
-  const handleSend = async (message) => {
+
+/*   const handleSend = async (message) => {
     const newMessage = {
       message: message,
       sender: "user",
       direction: "outgoing",
     };
 
-    const newMessages = [...messages, newMessage]; //Old messages + new messages
+    const newMessages = [...messages, newMessage];
 
-    //Update messahes state
     setMessages(newMessages);
 
+    // Función para buscar un evento por nombre en la lista de eventos
+    const findEventByName = (eventName) => {
+      const lowerCaseEventName = eventName.toLowerCase(); // Convertir el nombre del evento proporcionado a minúsculas
+      eventsback.forEach((event) => {
+        const lowerCaseEvent = event.name.toLowerCase(); // Convertir el nombre del evento actual a minúsculas
+        if (lowerCaseEvent === lowerCaseEventName) {
+          console.log("Se encontró un evento con el nombre:", event.name);
+          // Aquí puedes devolver el evento o realizar alguna acción adicional
+        }
+      });
+      
+      return eventsback.find((event) => event.name.toLowerCase() === eventName.toLowerCase());
+    };
+
+    // Función para calcular el total de boletas
+    const calculateTotal = (price, quantity) => {
+      return price * quantity;
+    };
+
+    // Procesar el mensaje del usuario
+        if (message.toLowerCase().startsWith("precio")) {
+      // Si el mensaje del usuario indica que quiere calcular el precio total de las boletas
+      const parts = message.toLowerCase().split(" ");
+      const price = parseFloat(parts[1]);
+      const quantity = parseFloat(parts[2]);
+      if (!isNaN(price) && !isNaN(quantity)) {
+        const total = calculateTotal(price, quantity);
+        const response = `El precio total por ${quantity} boletas es: ${total}`;
+        const botMessage = {
+          message: response,
+          sender: "bot",
+          direction: "incoming",
+        };
+        setMessages([...newMessages, botMessage]); 
+
+    if (message.toLowerCase().startsWith("precio")) {
+      // Si el mensaje del usuario indica que quiere calcular el precio total de las boletas
+      const parts = message.toLowerCase().split(" ");
+      const price = parseFloat(parts[1]);
+      const quantity = parseFloat(parts[2]);
+      if (!isNaN(price) && !isNaN(quantity)) {
+        const total = calculateTotal(price, quantity);
+        const response = `El precio total por ${quantity} boletas es: ${total}`;
+        const botMessage = {
+          message: response,
+          sender: "bot",
+          direction: "incoming",
+        };
+        setMessages([...newMessages, botMessage]);
+      } else {
+        // Si el usuario no proporciona números válidos para el cálculo
+        const response = "Por favor, proporciona números válidos para el cálculo del precio total.";
+        const botMessage = {
+          message: response,
+          sender: "bot",
+          direction: "incoming",
+        };
+        setMessages([...newMessages, botMessage]);
+      }
+    } else if (message.toLowerCase().startsWith("evento")){
+      // Si el mensaje del usuario no es una solicitud de cálculo de precio, buscar el evento por nombre
+      const event = findEventByName(message);
+      if (event) {
+        // Si se encuentra el evento, construir la respuesta con detalles del evento
+        const response = `Te puedo proporcionar información sobre el evento "${event.name}". Este evento está programado para el ${event.description} en ${event.place}. Su precio es: ${event.price}`;
+        const botMessage = {
+          message: response,
+          sender: "bot",
+          direction: "incoming",
+        };
+        setMessages([...newMessages, botMessage]);
+      } else {
+        // Si no se encuentra el evento, responder que no se encontró información
+        const response = `Lo siento, no encontré información sobre el evento "${message}".`;
+        const botMessage = {
+          message: response,
+          sender: "bot",
+          direction: "incoming",
+        };
+        setMessages([...newMessages, botMessage]);
+      }
+    } */
+
+
+  const handleSend = async (message) => {
+
+    const findEventByName = (eventName) => {
+      return eventsback.find((event) => event.name.toLowerCase() === eventName.toLowerCase());
+    };
+
+    // Función para calcular el total de boletas
+    const calculateTotal = (price, quantity) => {
+      return price * quantity;
+    };
+
+     // Si no es un mensaje sobre el precio, procesar como mensaje normal
+     const newMessage = {
+      message: message,
+      sender: "user",
+      direction: "outgoing",
+    };
+  
+    const newMessages = [...messages, newMessage]; //Old messages + new messages
+  
+    //Update messages state
+    setMessages(newMessages);
+  
     //Set a typing indicator from ChatGPT
     setTyping(true);
     //Process message to chatGPT
     await processMessageToChatGPT(newMessages);
-  };
 
+    if (message.toLowerCase().startsWith("precio del evento")) {
+      const parts = message.toLowerCase().split("boletas");
+      const eventName = parts[0].substring(18).trim(); // Obtener el nombre del evento eliminando "precio del evento" y espacios adicionales // Unir todas las partes restantes para obtener el nombre completo del evento
+      const event = findEventByName(eventName); // Buscar el evento por su nombre
+  
+      if (event) {
+        const quantity = parseFloat(parts[parts.length - 1]); // Obtener la cantidad de boletas del último elemento de "parts"
+        if (!isNaN(quantity)) {
+          const total = calculateTotal(event.price, quantity); // Calcular el precio total multiplicando el precio del evento por la cantidad de boletas
+          const response = `El precio total por ${quantity} boletas para el evento "${eventName}" es: ${total}, ya que cada boleta cuesta "${event.price}" `;
+          const botMessage = {
+            message: response,
+            sender: "bot",
+            direction: "incoming",
+          };
+          setMessages([...messages, botMessage]);
+          return; // Salir de la función después de manejar este caso
+        } else {
+          const response = "La cantidad de boletas no es un número válido.";
+          const botMessage = {
+            message: response,
+            sender: "bot",
+            direction: "incoming",
+          };
+          setMessages([...messages, botMessage]);
+          return; // Salir de la función después de manejar este caso
+        }
+      } else {
+        const response = `No se encontró ningún evento con el nombre "${eventName}".`;
+        const botMessage = {
+          message: response,
+          sender: "bot",
+          direction: "incoming",
+        };
+        setMessages([...messages, botMessage]);
+        return; // Salir de la función después de manejar este caso
+      } 
+    }
+
+    if (message.toLowerCase().startsWith("evento")){
+      var eventName = " "
+      // Si el mensaje del usuario no es una solicitud de cálculo de precio, buscar el evento por nombre
+      const parts = message.toLowerCase().split(":"); // Dividir el mensaje por ":"
+      if (parts.length === 2) { // Verificar si se dividieron en dos partes
+        const command = parts[0].trim(); // Obtener el comando sin espacios adicionales
+        eventName = parts[1].trim(); // Obtener el nombre del evento sin espacios adicionales
+        if (command === "evento") { // Verificar si el comando es "evento"
+          console.log("Nombre del evento:", eventName);
+          // Aquí puedes hacer lo que necesites con el nombre del evento
+        } else {
+          console.log("Comando inválido:", command);
+        }
+      } else {
+        console.log("Formato de mensaje incorrecto");
+      }
+    
+      const event = findEventByName(eventName);
+      if (event) {
+        // Si se encuentra el evento, construir la respuesta con detalles del evento
+        const response = `Te puedo proporcionar información sobre el evento "${event.name}". Este evento está programado para el ${event.description} en ${event.place}. Su precio es: ${event.price}`;
+        const botMessage = {
+          message: response,
+          sender: "bot",
+          direction: "incoming",
+        };
+        setMessages([...newMessages, botMessage]);
+      } else {
+        // Si no se encuentra el evento, responder que no se encontró información
+        const response = `Lo siento, no encontré información sobre el evento "${message}".`;
+        const botMessage = {
+          message: response,
+          sender: "bot",
+          direction: "incoming",
+        };
+        setMessages([...newMessages, botMessage]);
+      }
+    }
+   
+  };
+  
   async function processMessageToChatGPT(chatMessages) {
     let apiMessages = chatMessages.map((messageObject) => {
       let role = "";
@@ -124,92 +338,68 @@ export function ChatBot() {
       }
       return { role: role, content: messageObject.message };
     });
-
-    // role: "user" -> message from user
-    // role: "assistan" -> message from ChatGPT
-    // role: "system" -> initial message defining HOW chat will talk
-
+  
     const systemMessage = {
       role: "system",
-      content: `Eres un nutriologo experto, y solo puedes responder preguntas de esa area (preguntas fuera de este 
-         tema debes decir que no estas relacionado a ellos), después de recibir el nombre del usuario, vas 
-         a preguntar las siguientes cosas y esperar a que te responda pregunta por pregunta. Las preguntas son: 
-         ¿Cual es tu edad?, ¿Cual es tu peso actual?, ¿Cual es tu altura?, ¿Cual es tu sexo?, 
-         ¿Que tipo de actividad fisica realizas, si realizas?, 
-         con base a esas respuestas vas a calcular el imc y brindarle al usuario un plan alimenticio con base a 
-         para que quiere el plan, también debes considerar alergias a medicamentos y alimentos, 
-         y si sufre de alguna condicion médica crónica, además, considerar sus preferencias alimenticias como si es vegano, 
-         vegetariano u omnívoro, intolerante a la lactosa y otra información que consideres necesaria, para que 
-         le brindes mejores recomendaciones al usuario que se alineen con sus elecciones dietéticas.
-         
-         Para afinar el plan aplimentecio que proporcionarás al usuario, debes tener en cuenta la región o
-         lugar en el que vive el usuario. Así podras recomendarle alimentos que si esten a su alcance.
-
-         Recuerda al final, generar el plan alimenticio detallado.
-
-         Dado que las respuestas las das en una aplicación wed desarrollada en React, cuando te soliciten una tabla 
-         que contenga información requerida por el usuario, o cuando genres el plan alimenticio, debes generarlo con HTML 
-         para que se vea bonita y sea clara para el usuario. En general, para acentos, negrillas, etc, debes usar formato para HTML.
-         
-         Recuerda ser siempre amigable y tambien hacer chistes de vez en cuando para hacer más amena la conversación.
-
-         Una vez hayas generado el plan nutricional, debes recordarle al usuario que puede dar click al boton de abajo para descargar el chat como pdf y guardar el plan que le acabas de dar.
-         `,
+      content: `Eres un experto en moda, eventos y entretenimiento.
+      Si te hacen preguntas en otros campos, dirás que no tienes conocimiento sobre eso y que no es tu área, pero que estás aquí para responder cualquier pregunta relacionada con moda, eventos y entretenimiento.
+     después de recibir el nombre del usuario, vas a decir las siguientes cosas, dile que es un gusto tenerlo ahí, que si desea conocer información sobre un evento debe escribir "evento: proporcionar el nombre del evento, y si quiere saber el precio de un evento debe seguir la siguiente
+      estructura en su mensaje "precio del evento: nombre del evento boletas num boletas`,
     };
-
+  
     const apiRequestBody = {
       model: "gpt-3.5-turbo",
       messages: [
         systemMessage,
-        ...apiMessages, //[message1, message2, message3...]
+        ...apiMessages,
       ],
     };
-
-    await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + API_KEY,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(apiRequestBody),
-    })
-      .then((data) => {
-        return data.json();
-      })
-      .then((data) => {
-        console.log(data);
-
-        if (
-          data.choices &&
-          data.choices.length > 0 &&
-          data.choices[0].message
-        ) {
-          const chatGPTMessage = data.choices[0].message.content;
-
-          if (chatGPTMessage) {
-            setMessages([
-              ...chatMessages,
-              {
-                message: chatGPTMessage,
-                sender: "ChatGPT",
-              },
-            ]);
-          } else {
-            console.error("El contenido del mensaje de ChatGPT es undefined.");
-          }
-        } else {
-          console.error(
-            "La estructura de la respuesta de la API no es la esperada:",
-            data
-          );
-        }
-
-        setTyping(false);
-      })
-      .catch((error) => {
-        console.error("Error al procesar la respuesta de la API:", error);
+  
+    try {
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + API_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(apiRequestBody),
       });
+    
+      const data = await response.json();
+    
+      if (
+        data.choices &&
+        data.choices.length > 0 &&
+        data.choices[0].message
+      ) {
+        const chatGPTMessage = data.choices[0].message.content;
+  
+        if (chatGPTMessage) {
+          setMessages([
+            ...chatMessages,
+            {
+              message: chatGPTMessage,
+              sender: "ChatGPT",
+            },
+          ]);
+        } else {
+          console.error("El contenido del mensaje de ChatGPT es undefined.");
+        }
+      } else {
+        console.error(
+          "La estructura de la respuesta de la API no es la esperada:",
+          data
+        );
+      }
+  
+      setTyping(false);
+    } catch (error) {
+      console.error("Error al procesar la respuesta de la API:", error);
+    }
   }
+  
+
+
 
   return (
     <>
