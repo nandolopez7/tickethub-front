@@ -29,7 +29,7 @@ const MainContent = styled.div`
 `;
 
 /* Aqu va la API KEY */
-const API_KEY = "x";
+const API_KEY = process.env.REACT_APP_API_KEY;
 
 export function ChatBot() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -51,6 +51,10 @@ export function ChatBot() {
   const [eventsback, setEvents] = useState([]);
   const URL_BACKEND = "http://127.0.0.1:8000";
 
+  const handlePrint = () => {
+    window.print();
+  };
+  
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -119,104 +123,12 @@ export function ChatBot() {
     chatRef.current.style.overflow = originalOverflow;
   };
 
+
   useEffect(() => {
     // Mostrar el modal al cargar la página
     handleShow();
   }, []);
 
-  /*   const handleSend = async (message) => {
-    const newMessage = {
-      message: message,
-      sender: "user",
-      direction: "outgoing",
-    };
-
-    const newMessages = [...messages, newMessage];
-
-    setMessages(newMessages);
-
-    // Función para buscar un evento por nombre en la lista de eventos
-    const findEventByName = (eventName) => {
-      const lowerCaseEventName = eventName.toLowerCase(); // Convertir el nombre del evento proporcionado a minúsculas
-      eventsback.forEach((event) => {
-        const lowerCaseEvent = event.name.toLowerCase(); // Convertir el nombre del evento actual a minúsculas
-        if (lowerCaseEvent === lowerCaseEventName) {
-          console.log("Se encontró un evento con el nombre:", event.name);
-          // Aquí puedes devolver el evento o realizar alguna acción adicional
-        }
-      });
-      
-      return eventsback.find((event) => event.name.toLowerCase() === eventName.toLowerCase());
-    };
-
-    // Función para calcular el total de boletas
-    const calculateTotal = (price, quantity) => {
-      return price * quantity;
-    };
-
-    // Procesar el mensaje del usuario
-        if (message.toLowerCase().startsWith("precio")) {
-      // Si el mensaje del usuario indica que quiere calcular el precio total de las boletas
-      const parts = message.toLowerCase().split(" ");
-      const price = parseFloat(parts[1]);
-      const quantity = parseFloat(parts[2]);
-      if (!isNaN(price) && !isNaN(quantity)) {
-        const total = calculateTotal(price, quantity);
-        const response = `El precio total por ${quantity} boletas es: ${total}`;
-        const botMessage = {
-          message: response,
-          sender: "bot",
-          direction: "incoming",
-        };
-        setMessages([...newMessages, botMessage]); 
-
-    if (message.toLowerCase().startsWith("precio")) {
-      // Si el mensaje del usuario indica que quiere calcular el precio total de las boletas
-      const parts = message.toLowerCase().split(" ");
-      const price = parseFloat(parts[1]);
-      const quantity = parseFloat(parts[2]);
-      if (!isNaN(price) && !isNaN(quantity)) {
-        const total = calculateTotal(price, quantity);
-        const response = `El precio total por ${quantity} boletas es: ${total}`;
-        const botMessage = {
-          message: response,
-          sender: "bot",
-          direction: "incoming",
-        };
-        setMessages([...newMessages, botMessage]);
-      } else {
-        // Si el usuario no proporciona números válidos para el cálculo
-        const response = "Por favor, proporciona números válidos para el cálculo del precio total.";
-        const botMessage = {
-          message: response,
-          sender: "bot",
-          direction: "incoming",
-        };
-        setMessages([...newMessages, botMessage]);
-      }
-    } else if (message.toLowerCase().startsWith("evento")){
-      // Si el mensaje del usuario no es una solicitud de cálculo de precio, buscar el evento por nombre
-      const event = findEventByName(message);
-      if (event) {
-        // Si se encuentra el evento, construir la respuesta con detalles del evento
-        const response = `Te puedo proporcionar información sobre el evento "${event.name}". Este evento está programado para el ${event.description} en ${event.place}. Su precio es: ${event.price}`;
-        const botMessage = {
-          message: response,
-          sender: "bot",
-          direction: "incoming",
-        };
-        setMessages([...newMessages, botMessage]);
-      } else {
-        // Si no se encuentra el evento, responder que no se encontró información
-        const response = `Lo siento, no encontré información sobre el evento "${message}".`;
-        const botMessage = {
-          message: response,
-          sender: "bot",
-          direction: "incoming",
-        };
-        setMessages([...newMessages, botMessage]);
-      }
-    } */
 
   const handleSend = async (message) => {
     const findEventByName = (eventName) => {
@@ -341,8 +253,8 @@ export function ChatBot() {
 
     const systemMessage = {
       role: "system",
-      content: `Eres un experto en moda, eventos y entretenimiento.
-      Si te hacen preguntas en otros campos, dirás que no tienes conocimiento sobre eso y que no es tu área, pero que estás aquí para responder cualquier pregunta relacionada con moda, eventos y entretenimiento.
+      content: `Eres un experto en moda, eventos y entretenimiento. Puedes responder cualquier pregunta sobre asistenci a un evento, sobre outfits, recomendaciones de ropa, itinerarios para un evento, etc, tu espectro de respuestas es muy amplio.
+  
      después de recibir el nombre del usuario, vas a decir las siguientes cosas, dile que es un gusto tenerlo ahí, que si desea conocer información sobre un evento debe escribir "evento: proporcionar el nombre del evento, y si quiere saber el precio de un evento debe seguir la siguiente
       estructura en su mensaje "precio del evento: nombre del evento boletas num boletas`,
     };
@@ -399,7 +311,7 @@ export function ChatBot() {
       <Container fluid>
         <SidebarUser isOpen={isSidebarOpen} onToggle={setIsSidebarOpen} />
         <MainContent isOpen={isSidebarOpen}>
-          <div
+        <div
             style={{
               position: "relative",
               margin: "0 auto",
@@ -460,7 +372,7 @@ export function ChatBot() {
         style={{ width: "20rem", marginTop: "1em" }}
         variant="outline-primary"
         size="lg"
-        onClick={generatePDF}
+        onClick={handlePrint}
       >
         Descargar Chat como PDF
       </Button>
