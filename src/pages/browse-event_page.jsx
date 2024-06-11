@@ -16,7 +16,7 @@ import Swal from "sweetalert2";
 export function BrowseEvent() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [visibleEvents, setVisibleEvents] = useState(6); // Controla cuántos eventos se muestran
-  const URL_BACKEND = "https://tickethub-back.onrender.com/";
+  const URL_BACKEND = "https://tickethub-back.onrender.com";
   const [eventsback, setEvents] = useState([]);
   
 
