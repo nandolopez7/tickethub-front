@@ -29,7 +29,7 @@ const MainContent = styled.div`
 `;
 
 /* Aqu va la API KEY */
-const API_KEY = process.env.REACT_APP_API_KEY;
+const API_KEY = process.env.CHAT_API;
 
 export function ChatBot() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
