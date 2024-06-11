@@ -65,11 +65,15 @@ export function UserProfile() {
                       padding: "25px",
                     }}
                   >
-                    <Col xs={6} md={4}>
+                    <Col className="d-flex justify-content-center">
                       <Image
                         src={userData.foto}
-                        roundedCircle
-                        style={{ width: "400px", height: "auto" }}
+                        style={{
+                          width: "200px", 
+                          height: "200px", 
+                          objectFit: "cover",
+                          borderRadius: "50%" 
+                        }}
                       />
                     </Col>
                     <Form.Group
