@@ -49,7 +49,7 @@ export function ChatBot() {
   // eslint-disable-next-line
   const [visibleEvents, setVisibleEvents] = useState([]);
   const [eventsback, setEvents] = useState([]);
-  const URL_BACKEND = "https://tickethub-back.onrender.com/";
+  const URL_BACKEND = "https://tickethub-back.onrender.com";
 
   const handlePrint = () => {
     window.print();
