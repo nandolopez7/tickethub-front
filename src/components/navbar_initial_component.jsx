@@ -42,6 +42,13 @@ export function NavbarInitialComponent() {
               >
                 About
               </Nav.Link>
+              <Nav.Link
+                className="text-navbar"
+                onClick={() => handleLinkClick("/about")}
+              >
+
+              </Nav.Link>
+
             </Nav>
             <Nav className="ms-auto">
               <Nav.Link

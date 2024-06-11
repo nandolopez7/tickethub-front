@@ -98,8 +98,20 @@ export function SidebarUser({ onToggle, isOpen }) {
             Events
           </MenuItem>
           <MenuItem
+            active={activeItem === "myevents"}
+            onClick={() => handleItemClick("myevents", "/myevents")}
+          >
+            Your events
+          </MenuItem>
+          <MenuItem
+            active={activeItem === "chat"}
+            onClick={() => handleItemClick("chat", "/chat")}
+          >
+            TicketChat
+          </MenuItem>
+          <MenuItem
             active={activeItem === "signout"}
-            onClick={() => handleItemClick("signout", "/signout")}
+            onClick={() => handleItemClick("signout", "/sign-in")}
           >
             Sign Out
           </MenuItem>

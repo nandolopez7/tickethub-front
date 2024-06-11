@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Swal from "sweetalert2";
 import { api } from "../api/api_base";
-import { useParams } from 'react-router-dom';
 import { SidebarAdmin } from "../components/sidebar_admin_component";
 import {
   Container,

@@ -9,6 +9,8 @@ import { UserProfile } from './pages/user_page';
 import { UserEvent } from './pages/events_user_page.jsx'; 
 import { UserAdmin } from './pages/admin_page.jsx';
 import { AddEvent } from './pages/add_event_page.jsx';
+import { MyEvents } from './pages/events_purchased_page.jsx';
+import {ChatBot} from './pages/chatbot.jsx'
 
 
 /**Como crear rutas  
@@ -31,6 +33,8 @@ function App() {
       <Route path="/buy-event" element={<UserEvent />} />
       <Route path="/admin" element={<UserAdmin />} />
       <Route path="/add-event" element={<AddEvent />} />
+      <Route path="/myevents" element={<MyEvents />} />
+      <Route path="/chat" element={<ChatBot />} />
     </Routes>
 
   </BrowserRouter>
