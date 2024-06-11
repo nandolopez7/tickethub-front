@@ -61,14 +61,15 @@ export function BrowseEvent() {
 
 
   const [selectedEvent, setSelectedEvent] = useState(null);
+  // eslint-disable-next-line
   const [selectedEventId, setSelectedEventId] = useState(null);
-
+  // eslint-disable-next-line
   const handleBuyTicketsClick = (eventData) => {
     console.log("Event ID:", eventData.id); // Imprimir el ID del evento
     setSelectedEventId(eventData.id); // Actualizar el estado con el ID del evento seleccionado
     setSelectedEvent(eventData);
   };
-
+  // eslint-disable-next-line
   const handleConfirmPurchase = () => {
     const number = parseInt(document.getElementById("formQuantity").value);
     const cost = selectedEvent.price;
@@ -110,7 +111,7 @@ export function BrowseEvent() {
         console.log(response.data.id);
         console.log(response.data.valid);
         // Cuando la solicitud es exitosa
-        if (response.status == 201) {
+        if (response.status === 201) {
           setSelectedEvent(null);
 
           Swal.fire({
@@ -149,7 +150,7 @@ export function BrowseEvent() {
       });
   };
 
-
+  // eslint-disable-next-line
   const handleQuantityChange = () => {
     const quantity = parseInt(document.getElementById("formQuantity").value);
     const cost = selectedEvent.price;
@@ -158,7 +159,7 @@ export function BrowseEvent() {
     document.getElementById("totalPrice").value = totalPrice;
   };
 
-
+  // eslint-disable-next-line
   const handleCloseModal = () => {
     setSelectedEvent(null);
   };

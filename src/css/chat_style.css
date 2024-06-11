@@ -1,5 +1,5 @@
 div .cs-message-list__typing-indicator-container div {
-    color: #9333EA;
+    color: #6366F1;
   }
   
   div .cs-main-container  {
@@ -12,6 +12,7 @@ div .cs-message-list__typing-indicator-container div {
   div .ps__rail-y:hover .ps__thumb-y,
   div .ps__rail-y:active .ps__thumb-y {
     background-color: #9333EA;
+    color: #ffffff;
   }
   
   div .cs-message-input__content-editor,
@@ -28,11 +29,11 @@ div .cs-message-list__typing-indicator-container div {
   }
   
   div .cs-typing-indicator__dot {
-    background-color: #9333EA;
+    background-color: #6366F1;
   }
   
   div .cs-message-list__typing-indicator-container {
-      background-color: #9333EA;
+      background-color: #6366F1;
   }
   
   
