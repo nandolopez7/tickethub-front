@@ -67,7 +67,7 @@ export function UserProfile() {
                   >
                     <Col xs={6} md={4}>
                       <Image
-                        src={"userData.foto"}
+                        src={userData.foto}
                         roundedCircle
                         style={{ width: "400px", height: "auto" }}
                       />
