@@ -77,6 +77,7 @@ export function ChatBot() {
 
   useEffect(() => {
     console.log(eventsback);
+    console.log(API_KEY);
   }, [eventsback]);
 
   const chatRef = useRef(); // Agrega esta línea para referenciar el contenedor del chat
