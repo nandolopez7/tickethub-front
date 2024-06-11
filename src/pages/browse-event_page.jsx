@@ -74,9 +74,9 @@ export function BrowseEvent() {
     const number = parseInt(document.getElementById("formQuantity").value);
     const cost = selectedEvent.price;
     const event = selectedEvent.id;
-    /* const assistant = sessionStorage.getItem("usuario_id");*/
+    const assistant = sessionStorage.getItem("user_id");
 
-    const assistant = 27;
+    /* const assistant = 27; */
     const name = document.getElementById("formName").value;
     const documentNumber = document.getElementById("formDocument").value;
     const totalPrice = cost * number;

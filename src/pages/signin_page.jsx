@@ -148,7 +148,18 @@ export function SignIn() {
       });
 
       if (response.ok) {
+        
         console.log("User registered successfully.");
+
+        const responseData = await response.json();
+        console.log(responseData)
+        console.log(responseData.first_name)
+        sessionStorage.setItem("user_nombre", responseData.first_name);
+        sessionStorage.setItem("user_apellido", responseData.last_name);
+        sessionStorage.setItem("user_correo", responseData.email);
+        sessionStorage.setItem("user_foto", responseData.photo);
+        sessionStorage.setItem("user_id", responseData.id);
+
         navigate("/user");
       } else {
         const errorData = await response.json();
@@ -191,8 +202,6 @@ export function SignIn() {
 
         console.log(responseData.user)
 
-        const usuario = sessionStorage.getItem("user").first_name
-        console.log(usuario)
 
         navigate("/user");
       } else {
