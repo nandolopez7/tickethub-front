@@ -16,7 +16,7 @@ import Swal from "sweetalert2";
 export function BrowseEvent() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [visibleEvents, setVisibleEvents] = useState(6); // Controla cuántos eventos se muestran
-  const URL_BACKEND = "http://127.0.0.1:8000";
+  const URL_BACKEND = "https://tickethub-back.onrender.com/";
   const [eventsback, setEvents] = useState([]);
   
 
@@ -102,7 +102,7 @@ export function BrowseEvent() {
 
     axios
       .post(
-        "http://127.0.0.1:8000/buy-ticket-event/",
+        "https://tickethub-back.onrender.com/",
         { number, cost, event, assistant },
         { headers }
       )
