@@ -30,7 +30,7 @@ export function MyEvents() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   //eslint-disable-next-line
   const [selectedEventId, setSelectedEventId] = useState(null);
-  const URL_BACKEND = "http://127.0.0.1:8000";
+  const URL_BACKEND = "https://tickethub-back.onrender.com/";
   
   const userId = sessionStorage.getItem("user_id");
 
