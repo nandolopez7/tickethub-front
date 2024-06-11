@@ -103,6 +103,7 @@ export function MyEvents() {
                   category={event.category}
                   imageUrl={event.file_cover}
                   price={event.price}
+                  tickets={event.tickets}
                 />
               </Col>
             ))}

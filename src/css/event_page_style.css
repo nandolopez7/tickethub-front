@@ -48,6 +48,21 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
     transition: transform 0.3s, background-color 0.3s; 
   }
+
+  .info-buyticket {
+    display: inline-block;
+    gap: 5px;
+    color:#f4eeee;
+    margin-top: 2px;
+    font-weight: bold;
+    background: #7c3aed;
+    border-radius: 200px;
+    padding-left: 6px; 
+    padding-right: 6px; 
+    text-align: center; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    transition: transform 0.3s, background-color 0.3s; 
+  }
   
   .price-event:hover {
     transform: scale(1.1); 

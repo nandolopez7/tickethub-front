@@ -1,7 +1,7 @@
 import React from "react";
 import "../css/event_page_style.css";
 
-export function CardEvent({ title, date, location, category, imageUrl, price }) {
+export function CardEvent({ title, date, location, category, imageUrl, price, tickets = undefined }) {
   // Truncar el título a 50 caracteres si es necesario
   const truncatedTitle = title.length > 50 ? title.substring(0, 50) + "..." : title;
 
@@ -16,7 +16,14 @@ export function CardEvent({ title, date, location, category, imageUrl, price }) 
           <span>{location}</span>
         </div>
         <span>Categoria: {category}</span><br/>
-        <div className="price-event">${price}</div>
+        {!tickets && (<div className="price-event">${price}</div>)}
+        {tickets && (
+            <div className="info-buyticket">
+              <span>#{tickets.number_of_tickest}</span>
+              <span> |</span>
+              <span> ${tickets.total}</span>
+          </div>
+          )}
       </div>
     </div>
   );
