@@ -36,7 +36,7 @@ export function UserProfile() {
       foto: user_foto,
     };
 
-    console.log(sessionStorage.getItem("user_foto");
+    console.log(sessionStorage.getItem("user_foto")); 
 
     setUserData(parsedData);
   }, []);
