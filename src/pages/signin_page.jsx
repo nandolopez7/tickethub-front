@@ -100,14 +100,13 @@ export function SignIn() {
     }
   }, [cameraActive, stream]);
 
-  const handleRetakeSelfie = () => {
-/*     setCapturedPhoto(null);
-    setPhotoTaken(false);
-    setPreviewSrc(null);
-    setShowModal(false);
-    setCameraActive(true); // Cambio a true para activar la cámara nuevamente
- */
-    openCamera()
+  const handleRetakeSelfie = async () => {
+     setCapturedPhoto(null);
+     setPhotoTaken(false);
+     setPreviewSrc(null);
+     setShowModal(false);
+     setCameraPermissionGranted(false);
+     setCameraActive(true); // Cambio a true para activar la cámara nuevamente
   };
 
   const handleInputChange = (event) => {

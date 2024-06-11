@@ -99,7 +99,7 @@ export function SidebarAdmin({ onToggle, isOpen }) {
           </MenuItem>
           <MenuItem
             active={activeItem === "signout"}
-            onClick={() => handleItemClick("signout", "/signout")}
+            onClick={() => handleItemClick("signout", "/sign-in")}
           >
             Sign Out
           </MenuItem>
