@@ -32,7 +32,7 @@ const MainContent = styled.div`
 const API_KEY = process.env.REACT_APP_API_KEY;
 
 export function ChatBot() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -49,12 +49,12 @@ export function ChatBot() {
   // eslint-disable-next-line
   const [visibleEvents, setVisibleEvents] = useState([]);
   const [eventsback, setEvents] = useState([]);
-  const URL_BACKEND = "https://tickethub-back.onrender.com";
+  const URL_BACKEND = "http://127.0.0.1:8000";
 
   const handlePrint = () => {
     window.print();
   };
-  
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -124,18 +124,36 @@ export function ChatBot() {
     chatRef.current.style.overflow = originalOverflow;
   };
 
-
   useEffect(() => {
     // Mostrar el modal al cargar la página
     handleShow();
   }, []);
 
-
   const handleSend = async (message) => {
-    const findEventByName = (eventName) => {
+    /* const findEventByName = (eventName) => {
       return eventsback.find(
         (event) => event.name.toLowerCase() === eventName.toLowerCase()
       );
+    }; */
+
+    const stringSimilarity = require('string-similarity'); // Importar la librería de similitud de cadenas
+
+    const findEventByName = (eventName) => {
+      // Convertir todos los nombres de eventos a minúsculas para hacer la comparación más consistente
+      const eventNames = eventsback.map(event => event.name.toLowerCase());
+
+      // Obtener la lista de similitud entre el nombre proporcionado y los nombres de eventos
+      const matches = stringSimilarity.findBestMatch(eventName.toLowerCase(), eventNames);
+
+      // Verificar si hay coincidencias por encima de un cierto umbral de similitud
+      const bestMatch = matches.bestMatch;
+      if (bestMatch.rating >= 0.6) { // Umbral de similitud del 60%
+        // Devolver el evento correspondiente al mejor resultado de coincidencia
+        const matchedEventIndex = eventNames.findIndex(name => name === bestMatch.target.toLowerCase());
+        return eventsback[matchedEventIndex];
+      } else {
+        return null; // No se encontraron eventos similares por encima del umbral de similitud
+      }
     };
 
     // Función para calcular el total de boletas
@@ -160,35 +178,47 @@ export function ChatBot() {
     //Process message to chatGPT
     await processMessageToChatGPT(newMessages);
 
-    if (message.toLowerCase().startsWith("precio del evento")) {
-      const parts = message.toLowerCase().split("boletas");
-      const eventName = parts[0].substring(18).trim(); // Obtener el nombre del evento eliminando "precio del evento" y espacios adicionales // Unir todas las partes restantes para obtener el nombre completo del evento
-      const event = findEventByName(eventName); // Buscar el evento por su nombre
 
-      if (event) {
-        const quantity = parseFloat(parts[parts.length - 1]); // Obtener la cantidad de boletas del último elemento de "parts"
-        if (!isNaN(quantity)) {
-          const total = calculateTotal(event.price, quantity); // Calcular el precio total multiplicando el precio del evento por la cantidad de boletas
-          const response = `El precio total por ${quantity} boletas para el evento "${eventName}" es: ${total}, ya que cada boleta cuesta "${event.price}" `;
-          const botMessage = {
-            message: response,
-            sender: "ChatGPT",
-            direction: "incoming",
-          };
-          setMessages([...messages, botMessage]);
-          return; // Salir de la función después de manejar este caso
-        } else {
-          const response = "La cantidad de boletas no es un número válido.";
-          const botMessage = {
-            message: response,
-            sender: "ChatGPT",
-            direction: "incoming",
-          };
-          setMessages([...messages, botMessage]);
-          return; // Salir de la función después de manejar este caso
-        }
+    
+    if (message.toLowerCase().includes("evento") && message.toLowerCase().includes("boletas")) {
+      const regex = /evento:\s*(.*),\s*boletas:\s*(\d+)/i;
+      const match = message.match(regex);
+
+      if (match) {
+        // El nombre del evento está en el grupo 1 y el número de boletas está en el grupo 2
+        const eventName = match[1];
+        const numTickets = parseInt(match[2]);
+
+        // Verificar si se obtuvieron tanto el nombre del evento como el número de boletas
+        if (eventName && !isNaN(numTickets)) {
+          const event = findEventByName(eventName);
+
+          if (event){
+            const total = calculateTotal(event.price, numTickets); 
+            const response = `El precio total por ${numTickets} boletas para el evento "${eventName}" es: ${total}, ya que cada boleta cuesta "${event.price}", ¿Deseas algo más? `;
+            const botMessage = {
+              message: response,
+              sender: "ChatGPT",
+              direction: "incoming",
+            };
+            setMessages([...messages, botMessage]);
+            return; // Salir de la función después de manejar este caso
+
+          } else {
+           
+            const response = `No se encontró ningun evento, proporciona otra vez tu solicitud`;
+            const botMessage = {
+              message: response,
+              sender: "ChatGPT",
+              direction: "incoming",
+            };
+            setMessages([...messages, botMessage]);
+            return; // Salir de la función después de manejar este caso
+          }
+      
       } else {
-        const response = `No se encontró ningún evento con el nombre "${eventName}".`;
+
+        const response = `El formato del mensaje es incorrecto. Por favor, asegúrate de incluir tanto el nombre del evento como la cantidad de boletas.`;
         const botMessage = {
           message: response,
           sender: "ChatGPT",
@@ -196,8 +226,11 @@ export function ChatBot() {
         };
         setMessages([...messages, botMessage]);
         return; // Salir de la función después de manejar este caso
+
       }
-    }
+      }
+  }
+
 
     if (message.toLowerCase().startsWith("evento")) {
       var eventName = " ";
@@ -254,11 +287,39 @@ export function ChatBot() {
 
     const systemMessage = {
       role: "system",
-      content: `Eres un experto en moda, eventos y entretenimiento. Puedes responder cualquier pregunta sobre asistenci a un evento, sobre outfits, recomendaciones de ropa, itinerarios para un evento, etc, tu espectro de respuestas es muy amplio.
-  
-     después de recibir el nombre del usuario, vas a decir las siguientes cosas, dile que es un gusto tenerlo ahí, que si desea conocer información sobre un evento debe escribir "evento: proporcionar el nombre del evento, y si quiere saber el precio de un evento debe seguir la siguiente
-      estructura en su mensaje "precio del evento: nombre del evento boletas num boletas`,
+      content: ` Eres un experto en moda, eventos y entretenimiento. Tu objetivo es proporcionar información precisa y útil sobre asistencia a eventos, outfits, recomendaciones de vestimenta, itinerarios para eventos, y cualquier otra consulta relacionada con eventos y entretenimiento. Tu espectro de respuestas es muy amplio.
+    Cuando recibas el nombre del usuario, sigue estos pasos:
+    
+    Dale la bienvenida al usuario mencionando su nombre y expresando que es un gusto tenerlo ahí.
+    Proporciónale las instrucciones necesarias para obtener información específica, como sigue:
+
+    Si tu consulta es para saber información sobre un determinado evento, marca 1. 
+    
+    Si tu consulta es para realizar la cotización de un evento, marca 2
+    
+    Si tu consulta es referente a la vestimenta y acciones de algun evento general, marca 3 
+    
+    Si tu solicitud es porque deseas asesoramiento porque deseas diseñar tu propio evento, marca 4
+      
+    Si tu consulta no se encuentra en estas áreas, contactatate directamente con soporte a esta dirección: http:localhost_3000. 
+
+    Debe enviar un número, ya sea 1,2,3, o 4, si no envia esto, entonces decirle que no se puede proceder con la solicitud, que indique el número correspondiente a su solicitud.
+
+    Si la respuesta es 1,  indicarle que por favor, proporcione el nombre del evento del que desea obtener información con la siguiente estructura: evento: nombre_evento.
+
+    Si la respuesta es 2,  indicarle que por favor, proporcione el nombre del evento del que desea obtener la cotixación y la cantidad de boletas a comprar, indicar el mensaje como: evento: nombre_evento y boletas: num_boletas, si mo sigue esa estructura indicarle que no es posible ayudarle porque no cumple con los requisitos para realizar la consulta.
+
+    Si la respuesta es 3, entonces le preguntarás cual es su consulta, de acuerdo a eso, te convertirás en in experto en moda y vestimenta, además de estar al tanto de todos los tipos de eventos, también se debe conocer artistas e influyentes de estos eventos reconocidos, podrás ser un asesor de imagém
+    Si un usuario pregunta sobre qué tipo de eventos es mejor, o qué tipo de ropa usar para un evento o una situación específica, debes proporcionar retroalimentación detallada. Actúa como un asesor de imagen y eventos, brindando recomendaciones personalizadas y consejos sobre la mejor elección de eventos y outfits de acuerdo a la situación o al tipo de evento.
+
+    Si la respuesta es 4. entonces serás un experto en la organización de eventos. Puedes responder preguntas sobre cómo resaltar un evento, mejorar el marketing de un evento, los pasos para hacer un evento exitoso, y cualquier otra consulta referente a la organización y creación de eventos.
+    
+    Tu función es ser lo más útil y amigable posible para mejorar la experiencia del usuario en Tickethub. 
+    Cada vez que termine de brindar su indicación preguntarle si desea realizar otra consulta. 
+    `,
     };
+
+    
 
     const apiRequestBody = {
       model: "gpt-3.5-turbo",
@@ -312,7 +373,8 @@ export function ChatBot() {
       <Container fluid>
         <SidebarUser isOpen={isSidebarOpen} onToggle={setIsSidebarOpen} />
         <MainContent isOpen={isSidebarOpen}>
-        <div
+          
+          <div
             style={{
               position: "relative",
               margin: "0 auto",
@@ -383,10 +445,16 @@ export function ChatBot() {
         onHide={handleClose}
         animation={false}
         backdrop="static"
+        size="xl"
       >
-        <Modal.Header>
+        <Modal.Header
+          style={{
+            background: "linear-gradient(to right, #6366F1, #9333EA)",
+            color: "white",
+          }}
+        >
           <Modal.Title>
-            Condiciones de Uso del Chatbot de Nutrición:
+            Condiciones de Uso del Chatbot de TicketHub:
           </Modal.Title>
         </Modal.Header>
         <Modal.Body
@@ -394,56 +462,81 @@ export function ChatBot() {
             textAlign: "justify",
           }}
         >
-          Bienvenido/a al Chatbot de Nutrición. Antes de utilizar nuestros
-          servicios, te pedimos que leas detenidamente las siguientes
-          condiciones.
+          Bienvenido a TicketHub. Estos Términos y Condiciones de Uso
+          ("Términos") regulan el uso del chatbot ("Chatbot") disponible en
+          nuestra aplicación, que ofrece asesoramiento sobre eventos. Al
+          interactuar con el Chatbot, usted acepta cumplir con estos Términos.
+          Si no está de acuerdo con estos Términos, por favor, no utilice el
+          Chatbot. <br />
+          <b>1. Descripción del Servicio:</b> El Chatbot de TicketHub está
+          diseñado para proporcionar información y asesoramiento sobre eventos,
+          incluyendo detalles sobre eventos futuros, recomendaciones basadas en
+          preferencias del usuario, y asistencia con la compra de entradas. El
+          Chatbot no ofrece asesoramiento financiero, legal ni de cualquier otro
+          tipo profesional.
           <br />
-          Al acceder y utilizar este chatbot, aceptas cumplir con los términos
-          establecidos a continuación:
-          <br />
-          <b>Propósito Informativo:</b> El chatbot de nutrición proporciona
-          información general sobre temas relacionados con la nutrición y el
-          bienestar. La información proporcionada no sustituye el consejo
-          profesional individualizado y está destinada únicamente con fines
-          informativos.
-          <br />
-          <b>Variedad de Usuarios:</b> Reconocemos que cada persona es única, y
-          la información proporcionada por el chatbot puede no ser aplicable a
-          todas las situaciones o a cada individuo. La orientación ofrecida se
-          basa en datos generales y no tiene en cuenta circunstancias personales
-          específicas.
-          <br />
-          <b>Consulta Profesional:</b> Se recomienda encarecidamente que
-          consultes con un profesional de la salud, como un nutricionista o
-          médico, antes de realizar cambios significativos en tu dieta o estilo
-          de vida. El chatbot no puede reemplazar la evaluación personalizada de
-          un profesional de la salud.
-          <br />
-          <b>Limitaciones Tecnológicas:</b> El chatbot utiliza inteligencia
-          artificial para proporcionar respuestas, y aunque se esfuerza por
-          ofrecer información precisa y actualizada, puede haber limitaciones en
-          su capacidad para comprender situaciones complejas o proporcionar
-          respuestas específicas en todos los casos.
-          <br />
-          <b>Confidencialidad:</b> La información proporcionada en el chatbot se
-          maneja de manera confidencial, según nuestra política de privacidad.
-          Sin embargo, ten en cuenta que la seguridad de la información a través
-          de internet no puede garantizarse al 100%.
-          <br />
-          <b>Responsabilidad del Usuario:</b> El usuario asume la
-          responsabilidad de cualquier acción que realice como resultado de la
-          información proporcionada por el chatbot. Ni el chatbot ni sus
-          creadores serán responsables de cualquier consecuencia derivada de las
-          decisiones tomadas basándose en la información proporcionada.
-          <br />
-          Al utilizar este chatbot, aceptas estas condiciones de uso. Si no
-          estás de acuerdo con alguna parte de estas condiciones, te
-          recomendamos que no utilices el servicio. Estas condiciones pueden
-          actualizarse ocasionalmente, y te recomendamos que las revises
-          periódicamente. ¡Gracias por utilizar nuestro Chatbot de Nutrición!
+          <b>2. Uso del Chatbot </b>
+          <ul>
+            <li>
+              <b>2.1 Elegibilidad:</b> El uso del Chatbot está permitido
+              únicamente a usuarios mayores de 18 años. Al utilizar el Chatbot,
+              usted declara y garantiza que cumple con este requisito.
+            </li>
+            <li>
+              <b>2.2 Cuenta de Usuario:</b> Para utilizar algunas funciones del
+              Chatbot, es posible que deba crear una cuenta en TicketHub. Usted
+              es responsable de mantener la confidencialidad de su cuenta y
+              contraseña, y acepta notificar a TicketHub inmediatamente sobre
+              cualquier uso no autorizado de su cuenta.
+            </li>
+            <li>
+              <b>2.3 Conducta del Usuario:</b> Al utilizar el Chatbot, usted se
+              compromete a: No utilizar el Chatbot para ningún propósito ilegal
+              o no autorizado. No interferir ni interrumpir el funcionamiento
+              del Chatbot. No transmitir ningún contenido que sea ilegal,
+              ofensivo, difamatorio, o que infrinja los derechos de terceros.
+            </li>
+          </ul>
+          <b>3. Limitación de Responsabilidad</b>
+          <ul>
+            <li>
+              <b>3.1 Información del Chatbot:</b> El Chatbot proporciona
+              información basada en datos disponibles y algoritmos de
+              recomendación. Aunque TicketHub se esfuerza por garantizar la
+              precisión de la información, no garantiza que toda la información
+              proporcionada por el Chatbot sea completa, precisa o actualizada.
+            </li>
+            <li>
+              <b>3.2 Limitación de Daños:</b> En ningún caso TicketHub será
+              responsable por cualquier daño indirecto, incidental, especial,
+              consecuente o punitivo, incluyendo pero no limitado a, pérdida de
+              beneficios, datos, uso, fondo de comercio, o otras pérdidas
+              intangibles resultantes del uso o la imposibilidad de uso del
+              Chatbot.
+            </li>
+          </ul>
+          <b>4. Modificaciones de los Términos:</b> TicketHub se reserva el
+          derecho de modificar estos Términos en cualquier momento. Cualquier
+          cambio será efectivo inmediatamente después de la publicación de los
+          Términos revisados en nuestra aplicación. El uso continuado del
+          Chatbot después de dichos cambios constituirá su aceptación de los
+          nuevos Términos. <br />
+          <b>5. Terminación: </b> TicketHub puede, a su discreción, suspender o
+          terminar su acceso al Chatbot en cualquier momento, con o sin causa, y
+          sin previo aviso. <br />
+          <b>6. Privacidad:</b> El uso del Chatbot está sujeto a la Política de
+          Privacidad de TicketHub, que describe cómo recopilamos, utilizamos y
+          compartimos su información personal.
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={handleClose}>
+          <Button
+            style={{
+              backgroundColor: "#6366F1",
+              color: "#fff",
+              border: "none",
+            }}
+            onClick={handleClose}
+          >
             Entendido
           </Button>
         </Modal.Footer>

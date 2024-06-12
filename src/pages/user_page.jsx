@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { SidebarUser } from "../components/sidebar_user_component";
 import { Container, Row, Col, Image, Form } from "react-bootstrap";
 import styled from "styled-components";
+import "../css/user_page_style.css"
 
 const MainContent = styled.div`
   padding: 20px;
@@ -10,12 +11,13 @@ const MainContent = styled.div`
     margin-left: ${({ isOpen }) => (isOpen ? "280px" : "25px")};
   }
   @media (max-width: 767px) {
-    margin-left: ${({ isOpen }) => (isOpen ? "0" : "60px")};
+    margin-left: ${({ isOpen }) => (isOpen ? "0" : "0")};
+    margin-top: ${({ isOpen }) => (isOpen ? "25px" : "25px")};
   }
 `;
 
 export function UserProfile() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
@@ -36,11 +38,10 @@ export function UserProfile() {
       foto: user_foto,
     };
 
-    console.log(sessionStorage.getItem("user_foto")); 
+    console.log(sessionStorage.getItem("user_foto"));
 
     setUserData(parsedData);
   }, []);
-
 
   return (
     <>
@@ -53,90 +54,65 @@ export function UserProfile() {
         }}
       >
         <SidebarUser isOpen={isSidebarOpen} onToggle={setIsSidebarOpen} />
-        <MainContent isOpen={isSidebarOpen}>
+        <MainContent isOpen={isSidebarOpen} className="mainContent-user">
           <Row>
             <Col>
               {userData ? (
                 <>
-                  <Form
-                    style={{
-                      borderRadius: "15px",
-                      boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
-                      padding: "25px",
-                    }}
-                  >
-                    <Col className="d-flex justify-content-center">
-                      <Image
-                        src={userData.foto}
-                        style={{
-                          width: "200px", 
-                          height: "200px", 
-                          objectFit: "cover",
-                          borderRadius: "50%" 
-                        }}
-                      />
-                    </Col>
-                    <Form.Group
-                      style={{
-                        borderRadius: "15px",
-                        boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
-                      }}
-                      as={Row}
-                      className="mb-3 mt-3"
-                      controlId="formPlaintextEmail"
-                    >
-                      <Form.Label column sm="2">
-                        Email
-                      </Form.Label>
-                      <Col sm="10">
-                        <Form.Control
-                          plaintext
-                          readOnly
-                          defaultValue={userData.correo || "email"}
+                  {/**{userData.foto}
+                   * {userData.correo || "email"}
+                   * {userData.nombre || "nombre"}
+                   * {userData.apellido || "apellido"}
+                   */}
+                  <Container fluid >
+                    <Row>
+                      <h1 className="text-center">Profile information</h1>
+                      <Col
+                      className="col-izq-user"
+
+                      >
+                        <Image
+                          src={userData.foto}
+                          style={{ width: "250px" }}
+                          roundedCircle
                         />
                       </Col>
-                    </Form.Group>
-                    <Form.Group
-                      style={{
-                        borderRadius: "15px",
-                        boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
-                      }}
-                      as={Row}
-                      className="mb-3 mt-3"
-                      controlId="formPlaintextName"
-                    >
-                      <Form.Label column sm="2">
-                        First name
-                      </Form.Label>
-                      <Col sm="10">
+                      <Col
+                      className="col-der-user"
+                      >
+                        <Form.Label column sm="2">
+                          Email
+                        </Form.Label>
                         <Form.Control
-                          plaintext
+                          type="text"
+                          placeholder={userData.correo || "email"}
+                          aria-label="Disabled input example"
+                          disabled
                           readOnly
-                          defaultValue={userData.nombre || "nombre"}
+                        />
+                        <Form.Label column sm="4" style={{ marginTop: "15px" }}>
+                          First name
+                        </Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder={userData.nombre || "nombre"}
+                          aria-label="Disabled input example"
+                          disabled
+                          readOnly
+                        />
+                        <Form.Label column sm="4" style={{ marginTop: "15px" }}>
+                          Last name
+                        </Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder={userData.apellido || "apellido"}
+                          aria-label="Disabled input example"
+                          disabled
+                          readOnly
                         />
                       </Col>
-                    </Form.Group>
-                    <Form.Group
-                      style={{
-                        borderRadius: "15px",
-                        boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
-                      }}
-                      as={Row}
-                      className="mb-3 mt-3"
-                      controlId="formPlaintextLast"
-                    >
-                      <Form.Label column sm="2">
-                        Last name
-                      </Form.Label>
-                      <Col sm="10">
-                        <Form.Control
-                          plaintext
-                          readOnly
-                          defaultValue={userData.apellido || "apellido"}
-                        />
-                      </Col>
-                    </Form.Group>
-                  </Form>
+                    </Row>
+                  </Container>
                 </>
               ) : (
                 <p>Loading...</p>
