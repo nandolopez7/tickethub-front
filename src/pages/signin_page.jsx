@@ -211,10 +211,13 @@ export function SignIn() {
 
       if (response.ok) {
         const responseData = await response.json();
+        const userPhoto = responseData.user.photo;
+        const fullPhotoURL = URL_BACKEND + userPhoto;
+
         sessionStorage.setItem("user_nombre", responseData.user.first_name);
         sessionStorage.setItem("user_apellido", responseData.user.last_name);
         sessionStorage.setItem("user_correo", responseData.user.email);
-        sessionStorage.setItem("user_foto", responseData.user.photo);
+        sessionStorage.setItem("user_foto", fullPhotoURL);
         sessionStorage.setItem("user_id", responseData.user.id);
 
         navigate("/user");

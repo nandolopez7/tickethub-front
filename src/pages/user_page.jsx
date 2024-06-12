@@ -72,7 +72,7 @@ export function UserProfile() {
 
                       >
                         <Image
-                          src={"/pruebas/avatar.webp"}
+                          src={userData.foto}
                           style={{ width: "250px" }}
                           roundedCircle
                         />

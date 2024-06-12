@@ -130,10 +130,30 @@ export function ChatBot() {
   }, []);
 
   const handleSend = async (message) => {
-    const findEventByName = (eventName) => {
+    /* const findEventByName = (eventName) => {
       return eventsback.find(
         (event) => event.name.toLowerCase() === eventName.toLowerCase()
       );
+    }; */
+
+    const stringSimilarity = require('string-similarity'); // Importar la librería de similitud de cadenas
+
+    const findEventByName = (eventName) => {
+      // Convertir todos los nombres de eventos a minúsculas para hacer la comparación más consistente
+      const eventNames = eventsback.map(event => event.name.toLowerCase());
+
+      // Obtener la lista de similitud entre el nombre proporcionado y los nombres de eventos
+      const matches = stringSimilarity.findBestMatch(eventName.toLowerCase(), eventNames);
+
+      // Verificar si hay coincidencias por encima de un cierto umbral de similitud
+      const bestMatch = matches.bestMatch;
+      if (bestMatch.rating >= 0.6) { // Umbral de similitud del 60%
+        // Devolver el evento correspondiente al mejor resultado de coincidencia
+        const matchedEventIndex = eventNames.findIndex(name => name === bestMatch.target.toLowerCase());
+        return eventsback[matchedEventIndex];
+      } else {
+        return null; // No se encontraron eventos similares por encima del umbral de similitud
+      }
     };
 
     // Función para calcular el total de boletas
@@ -158,35 +178,47 @@ export function ChatBot() {
     //Process message to chatGPT
     await processMessageToChatGPT(newMessages);
 
-    if (message.toLowerCase().startsWith("precio del evento")) {
-      const parts = message.toLowerCase().split("boletas");
-      const eventName = parts[0].substring(18).trim(); // Obtener el nombre del evento eliminando "precio del evento" y espacios adicionales // Unir todas las partes restantes para obtener el nombre completo del evento
-      const event = findEventByName(eventName); // Buscar el evento por su nombre
 
-      if (event) {
-        const quantity = parseFloat(parts[parts.length - 1]); // Obtener la cantidad de boletas del último elemento de "parts"
-        if (!isNaN(quantity)) {
-          const total = calculateTotal(event.price, quantity); // Calcular el precio total multiplicando el precio del evento por la cantidad de boletas
-          const response = `El precio total por ${quantity} boletas para el evento "${eventName}" es: ${total}, ya que cada boleta cuesta "${event.price}" `;
-          const botMessage = {
-            message: response,
-            sender: "ChatGPT",
-            direction: "incoming",
-          };
-          setMessages([...messages, botMessage]);
-          return; // Salir de la función después de manejar este caso
-        } else {
-          const response = "La cantidad de boletas no es un número válido.";
-          const botMessage = {
-            message: response,
-            sender: "ChatGPT",
-            direction: "incoming",
-          };
-          setMessages([...messages, botMessage]);
-          return; // Salir de la función después de manejar este caso
-        }
+    
+    if (message.toLowerCase().includes("evento") && message.toLowerCase().includes("boletas")) {
+      const regex = /evento:\s*(.*),\s*boletas:\s*(\d+)/i;
+      const match = message.match(regex);
+
+      if (match) {
+        // El nombre del evento está en el grupo 1 y el número de boletas está en el grupo 2
+        const eventName = match[1];
+        const numTickets = parseInt(match[2]);
+
+        // Verificar si se obtuvieron tanto el nombre del evento como el número de boletas
+        if (eventName && !isNaN(numTickets)) {
+          const event = findEventByName(eventName);
+
+          if (event){
+            const total = calculateTotal(event.price, numTickets); 
+            const response = `El precio total por ${numTickets} boletas para el evento "${eventName}" es: ${total}, ya que cada boleta cuesta "${event.price}", ¿Deseas algo más? `;
+            const botMessage = {
+              message: response,
+              sender: "ChatGPT",
+              direction: "incoming",
+            };
+            setMessages([...messages, botMessage]);
+            return; // Salir de la función después de manejar este caso
+
+          } else {
+           
+            const response = `No se encontró ningun evento, proporciona otra vez tu solicitud`;
+            const botMessage = {
+              message: response,
+              sender: "ChatGPT",
+              direction: "incoming",
+            };
+            setMessages([...messages, botMessage]);
+            return; // Salir de la función después de manejar este caso
+          }
+      
       } else {
-        const response = `No se encontró ningún evento con el nombre "${eventName}".`;
+
+        const response = `El formato del mensaje es incorrecto. Por favor, asegúrate de incluir tanto el nombre del evento como la cantidad de boletas.`;
         const botMessage = {
           message: response,
           sender: "ChatGPT",
@@ -194,8 +226,11 @@ export function ChatBot() {
         };
         setMessages([...messages, botMessage]);
         return; // Salir de la función después de manejar este caso
+
       }
-    }
+      }
+  }
+
 
     if (message.toLowerCase().startsWith("evento")) {
       var eventName = " ";
@@ -252,45 +287,39 @@ export function ChatBot() {
 
     const systemMessage = {
       role: "system",
-      content: `
-      
-      Eres un experto en moda, eventos y entretenimiento. Tu objetivo es proporcionar información precisa y útil sobre asistencia a eventos, outfits, recomendaciones de vestimenta, itinerarios para eventos, y cualquier otra consulta relacionada con eventos y entretenimiento. Tu espectro de respuestas es muy amplio.
-
+      content: ` Eres un experto en moda, eventos y entretenimiento. Tu objetivo es proporcionar información precisa y útil sobre asistencia a eventos, outfits, recomendaciones de vestimenta, itinerarios para eventos, y cualquier otra consulta relacionada con eventos y entretenimiento. Tu espectro de respuestas es muy amplio.
     Cuando recibas el nombre del usuario, sigue estos pasos:
-
+    
     Dale la bienvenida al usuario mencionando su nombre y expresando que es un gusto tenerlo ahí.
     Proporciónale las instrucciones necesarias para obtener información específica, como sigue:
-    Instrucciones para el usuario:
 
-    Para conocer información detallada sobre un evento, escribe: evento: nombre del evento.
-    Para saber el precio de las boletas para un evento específico, escribe: precio del evento: nombre del evento, número de boletas.
-    Ejemplo de interacción:
+    Si tu consulta es para saber información sobre un determinado evento, marca 1. 
+    
+    Si tu consulta es para realizar la cotización de un evento, marca 2
+    
+    Si tu consulta es referente a la vestimenta y acciones de algun evento general, marca 3 
+    
+    Si tu solicitud es porque deseas asesoramiento porque deseas diseñar tu propio evento, marca 4
+      
+    Si tu consulta no se encuentra en estas áreas, contactatate directamente con soporte a esta dirección: http:localhost_3000. 
 
-    Usuario: "evento: Concierto de Rock 2024"
+    Debe enviar un número, ya sea 1,2,3, o 4, si no envia esto, entonces decirle que no se puede proceder con la solicitud, que indique el número correspondiente a su solicitud.
 
-    Chatbot: "El Concierto de Rock 2024 se llevará a cabo el 15 de agosto en el Estadio Nacional. ¿Te gustaría saber más sobre los artistas o el horario?"
+    Si la respuesta es 1,  indicarle que por favor, proporcione el nombre del evento del que desea obtener información con la siguiente estructura: evento: nombre_evento.
 
-    Usuario: "precio del evento: Concierto de Rock 2024, 2 boletas"
+    Si la respuesta es 2,  indicarle que por favor, proporcione el nombre del evento del que desea obtener la cotixación y la cantidad de boletas a comprar, indicar el mensaje como: evento: nombre_evento y boletas: num_boletas, si mo sigue esa estructura indicarle que no es posible ayudarle porque no cumple con los requisitos para realizar la consulta.
 
-    Chatbot: "El precio para 2 boletas del Concierto de Rock 2024 es $100. ¿Deseas proceder con la compra?"
-
-    Además, puedes responder a preguntas generales como:
-
-    "¿Cuál es el código de vestimenta para el Concierto de Rock 2024?"
-    "¿Qué recomendaciones de vestimenta tienes para una gala?"
-    "¿Cuáles son los protocolos de seguridad para el evento XYZ?"
-    Asesor de imagen:
-
+    Si la respuesta es 3, entonces le preguntarás cual es su consulta, de acuerdo a eso, te convertirás en in experto en moda y vestimenta, además de estar al tanto de todos los tipos de eventos, también se debe conocer artistas e influyentes de estos eventos reconocidos, podrás ser un asesor de imagém
     Si un usuario pregunta sobre qué tipo de eventos es mejor, o qué tipo de ropa usar para un evento o una situación específica, debes proporcionar retroalimentación detallada. Actúa como un asesor de imagen y eventos, brindando recomendaciones personalizadas y consejos sobre la mejor elección de eventos y outfits de acuerdo a la situación o al tipo de evento.
 
-    Experto en organización de eventos:
-
-    Además de ser un asesor de moda y entretenimiento, eres un experto en la organización de eventos. Puedes responder preguntas sobre cómo resaltar un evento, mejorar el marketing de un evento, los pasos para hacer un evento exitoso, y cualquier otra consulta referente a la organización y creación de eventos.
-
-    Tu función es ser lo más útil y amigable posible para mejorar la experiencia del usuario en Tickethub. Estos son los eventos que hay en la plataforma, si un usuario pregunta por uno de ellos, o con un nombre similar debes proporcionar información. ${{
-      eventsback,
-    }}`,
+    Si la respuesta es 4. entonces serás un experto en la organización de eventos. Puedes responder preguntas sobre cómo resaltar un evento, mejorar el marketing de un evento, los pasos para hacer un evento exitoso, y cualquier otra consulta referente a la organización y creación de eventos.
+    
+    Tu función es ser lo más útil y amigable posible para mejorar la experiencia del usuario en Tickethub. 
+    Cada vez que termine de brindar su indicación preguntarle si desea realizar otra consulta. 
+    `,
     };
+
+    
 
     const apiRequestBody = {
       model: "gpt-3.5-turbo",
@@ -344,6 +373,7 @@ export function ChatBot() {
       <Container fluid>
         <SidebarUser isOpen={isSidebarOpen} onToggle={setIsSidebarOpen} />
         <MainContent isOpen={isSidebarOpen}>
+          
           <div
             style={{
               position: "relative",
