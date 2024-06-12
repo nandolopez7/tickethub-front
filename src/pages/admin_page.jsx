@@ -34,7 +34,7 @@ export function UserAdmin() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [visibleEvents, setVisibleEvents] = useState(6); // Controla cuántos eventos se muestran
-  const URL_BACKEND = "http://127.0.0.1:8000";
+  const URL_BACKEND = "https://tickethub-back.onrender.com";
   const [eventsback, setEvents] = useState([]);
 
   // Filtrar eventos según la categoría seleccionada
