@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import {Button, Modal} from 'react-bootstrap';
 import styled from "styled-components";
 import { FiMenu, FiX } from "react-icons/fi";
 
@@ -49,6 +50,7 @@ const MenuItem = styled.li`
 `;
 
 export function SidebarUser({ onToggle, isOpen }) {
+  const [modalShowSignOut, setModalShowSignOut] = useState(false);
   const [activeItem, setActiveItem] = useState("profile");
   const navigate = useNavigate();
   const location = useLocation();
@@ -72,6 +74,19 @@ export function SidebarUser({ onToggle, isOpen }) {
   const handleItemClick = (item, route) => {
     setActiveItem(item);
     navigate(route);
+  };
+
+  const handleShowModalSignOut = () => {
+    setModalShowSignOut(true);
+  }
+  const handleCloseModalSignOut = () => {
+    setModalShowSignOut(false);
+  }
+
+  const handleConfirmSignOut = () => {
+    setActiveItem("signout");
+    navigate("/sign-in");
+    setModalShowSignOut(false);
   };
 
   return (
@@ -111,12 +126,39 @@ export function SidebarUser({ onToggle, isOpen }) {
           </MenuItem>
           <MenuItem
             active={activeItem === "signout"}
-            onClick={() => handleItemClick("signout", "/sign-in")}
+            onClick={handleShowModalSignOut}
           >
             Sign Out
           </MenuItem>
         </Menu>
       </SidebarContainer>
+
+      <Modal
+        show={modalShowSignOut}
+        onHide={handleCloseModalSignOut}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton style={{ background: "linear-gradient(to right, #6366F1, #9333EA)", color:"white"}}>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Sign out
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h4>Are you sure you want to leave?</h4>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="outline-danger" onClick={handleCloseModalSignOut}>
+            Close
+          </Button>
+          <Button variant="outline-success" onClick={handleConfirmSignOut}>
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

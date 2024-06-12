@@ -13,8 +13,11 @@ import Swal from "sweetalert2";
 import "../css/sign_pages_style.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
+import { Hourglass } from "react-loader-spinner";
 
 export function SignIn() {
+  const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("");
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState(false);
   const [previewSrc, setPreviewSrc] = useState(null);
@@ -34,7 +37,7 @@ export function SignIn() {
   const [capturedPhoto, setCapturedPhoto] = useState(null);
   const [photoTaken, setPhotoTaken] = useState(false);
 
-  const URL_BACKEND = "https://tickethub-back.onrender.com";
+  const URL_BACKEND = "http://127.0.0.1:8000";
 
   const [formDataLogin, setFormDataLogin] = useState({
     emaillogin: "",
@@ -62,7 +65,6 @@ export function SignIn() {
       console.error("Error accessing camera:", error);
     }
   };
-  
 
   const takePhoto = () => {
     const video = document.getElementById("camera-preview");
@@ -101,12 +103,12 @@ export function SignIn() {
   }, [cameraActive, stream]);
 
   const handleRetakeSelfie = async () => {
-     setCapturedPhoto(null);
-     setPhotoTaken(false);
-     setPreviewSrc(null);
-     setShowModal(false);
-     setCameraPermissionGranted(false);
-     setCameraActive(true); // Cambio a true para activar la cámara nuevamente
+    setCapturedPhoto(null);
+    setPhotoTaken(false);
+    setPreviewSrc(null);
+    setShowModal(false);
+    setCameraPermissionGranted(false);
+    setCameraActive(true); // Cambio a true para activar la cámara nuevamente
   };
 
   const handleInputChange = (event) => {
@@ -133,6 +135,12 @@ export function SignIn() {
   const handleRegisterClick = async (event) => {
     event.preventDefault();
 
+    setLoading(true);
+    setLoadingMessage("Registrando...");
+
+    // Agregar el retraso de 10 segundos antes de continuar con el registro
+    await new Promise((resolve) => setTimeout(resolve, 7000));
+
     const data = new FormData();
     data.append("first_name", formData.firstName);
     data.append("last_name", formData.lastName);
@@ -148,19 +156,22 @@ export function SignIn() {
       });
 
       if (response.ok) {
-        
         console.log("User registered successfully.");
 
         const responseData = await response.json();
-        console.log(responseData)
-        console.log(responseData.first_name)
+        console.log(responseData);
+        console.log(responseData.first_name);
         sessionStorage.setItem("user_nombre", responseData.first_name);
         sessionStorage.setItem("user_apellido", responseData.last_name);
         sessionStorage.setItem("user_correo", responseData.email);
         sessionStorage.setItem("user_foto", responseData.photo);
         sessionStorage.setItem("user_id", responseData.id);
-
         navigate("/user");
+        Swal.fire({
+          icon: "success",
+          title: "Succesfully registered",
+          text: "Welcome aboard!",
+        });
       } else {
         const errorData = await response.json();
         if ("detail" in errorData) {
@@ -175,11 +186,18 @@ export function SignIn() {
       }
     } catch (error) {
       console.error("Error registering user:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleLogin = async (event) => {
     event.preventDefault();
+
+    setLoading(true);
+    setLoadingMessage("Iniciando sesión...");
+
+    await new Promise((resolve) => setTimeout(resolve, 7000));
 
     const data = new FormData();
     data.append("email", formDataLogin.emaillogin);
@@ -192,18 +210,19 @@ export function SignIn() {
       });
 
       if (response.ok) {
-        console.log("Login successfully.");
-        const responseData = await response.json(); // Espera a que la respuesta JSON se resuelva
+        const responseData = await response.json();
         sessionStorage.setItem("user_nombre", responseData.user.first_name);
         sessionStorage.setItem("user_apellido", responseData.user.last_name);
         sessionStorage.setItem("user_correo", responseData.user.email);
         sessionStorage.setItem("user_foto", responseData.user.photo);
         sessionStorage.setItem("user_id", responseData.user.id);
 
-        console.log(responseData.user)
-
-
         navigate("/user");
+        Swal.fire({
+          icon: "success",
+          title: "Login succesful",
+          text: "Welcome back!",
+        });
       } else {
         console.error("Failed to login user:", response);
         Swal.fire({
@@ -212,9 +231,10 @@ export function SignIn() {
           text: "Invalid credentials",
         });
       }
-      
     } catch (error) {
       console.error("Error login user:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -228,178 +248,217 @@ export function SignIn() {
 
   return (
     <>
-      <NavbarInitialComponent />
-      <Container fluid>
-        <Col className="col-sign">
-          <div
-            className={`sign-container ${isActive ? "active" : ""}`}
-            id="container"
-          >
-            <div className="form-container sign-up">
-              <form onSubmit={handleRegisterClick}>
-                <h1>Create Account</h1>
-                <input
-                  type="text"
-                  name="firstName"
-                  placeholder="First name"
-                  onChange={handleInputChange}
-                  required
-                />
-                {errors.firstName && <div className="error-api">{errors.firstName[0]}</div>} 
-                <input
-                  type="text"
-                  name="lastName"
-                  placeholder="Last name"
-                  onChange={handleInputChange}
-                  required
-                />
-                {errors.lastName && <div className="error-api">{errors.lastName[0]}</div>}
-                <input
-                  type="text"
-                  name="identificationNumber"
-                  placeholder="Identification number"
-                  onChange={handleInputChange}
-                  required
-                />
-                {errors.identification_number && <div className="error-api">{errors.identification_number[0]}</div>}
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  onChange={handleInputChange}
-                  required
-                />
-                {errors.email && <div className="error-api">{errors.email[0]}</div>}
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  onChange={handleInputChange}
-                  required
-                />
-                {errors.password && <div className="error-api">{errors.password[0]}</div>}
-                <div className="register-buttons">
-                  <button type="submit"> Sign Up</button>
-                  <div className="selfie-container">
-                    <OverlayTrigger
-                      placement="right"
-                      delay={{ show: 250, hide: 400 }}
-                      overlay={tooltipSelfie}
-                    >
+      {loading ? ( // Renderiza la pantalla de carga si loading es true
+        <div
+          className="d-flex justify-content-center align-items-center vh-100"
+          style={{
+            backgroundColor: "#f3f4f6",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Hourglass
+            height="150"
+            width="150"
+            radius="9"
+            colors={["#6366F1", "#9333EA"]}
+            ariaLabel="hourglass-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+          />
+
+          <h1>{loadingMessage}</h1>
+        </div>
+      ) : (
+        <>
+          <NavbarInitialComponent />
+          <Container fluid>
+            <Col className="col-sign">
+              <div
+                className={`sign-container ${isActive ? "active" : ""}`}
+                id="container"
+              >
+                <div className="form-container sign-up">
+                  <form onSubmit={handleRegisterClick}>
+                    <h1>Create Account</h1>
+                    <input
+                      type="text"
+                      name="firstName"
+                      placeholder="First name"
+                      onChange={handleInputChange}
+                      required
+                    />
+                    {errors.firstName && (
+                      <div className="error-api">{errors.firstName[0]}</div>
+                    )}
+                    <input
+                      type="text"
+                      name="lastName"
+                      placeholder="Last name"
+                      onChange={handleInputChange}
+                      required
+                    />
+                    {errors.lastName && (
+                      <div className="error-api">{errors.lastName[0]}</div>
+                    )}
+                    <input
+                      type="text"
+                      name="identificationNumber"
+                      placeholder="Identification number"
+                      onChange={handleInputChange}
+                      required
+                    />
+                    {errors.identification_number && (
+                      <div className="error-api">
+                        {errors.identification_number[0]}
+                      </div>
+                    )}
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Email"
+                      onChange={handleInputChange}
+                      required
+                    />
+                    {errors.email && (
+                      <div className="error-api">{errors.email[0]}</div>
+                    )}
+                    <input
+                      type="password"
+                      name="password"
+                      placeholder="Password"
+                      onChange={handleInputChange}
+                      required
+                    />
+                    {errors.password && (
+                      <div className="error-api">{errors.password[0]}</div>
+                    )}
+                    <div className="register-buttons">
+                      <button type="submit"> Sign Up</button>
+                      <div className="selfie-container">
+                        <OverlayTrigger
+                          placement="right"
+                          delay={{ show: 250, hide: 400 }}
+                          overlay={tooltipSelfie}
+                        >
+                          <button
+                            type="button"
+                            className="button-selfie"
+                            onClick={handleTakeSelfie}
+                          >
+                            Take a selfie
+                            <FontAwesomeIcon
+                              icon={faCamera}
+                              className="icon-selfie"
+                              size="lg"
+                              style={{ margin: "0 5px" }}
+                            />
+                          </button>
+                        </OverlayTrigger>
+                      </div>
+                    </div>
+                    {errors.photo && (
+                      <div className="error-api">{errors.photo[0]}</div>
+                    )}
+                  </form>
+                </div>
+                <div className="form-container sign-in">
+                  <form onSubmit={handleLogin}>
+                    <h1>Sign In</h1>
+                    <input
+                      type="email"
+                      name="emaillogin"
+                      placeholder="Email"
+                      onChange={handleInputLoginChange}
+                      required
+                    />
+                    <input
+                      type="password"
+                      name="password"
+                      placeholder="Password"
+                      onChange={handleInputLoginChange}
+                      required
+                    />
+                    {/*eslint-disable-next-line*/}
+                    <a href="#">Forgot your password?</a>
+
+                    <button type="submit" className="button-signIn">
+                      Sign In
+                    </button>
+                  </form>
+                </div>
+                <div className="toggle-container">
+                  <div className="toggle">
+                    <div className="toggle-panel toggle-left">
+                      <h1>Already an user? </h1>
+                      <p>Jump in to the greatest shows by signing in!</p>
                       <button
-                        type="button"
-                        className="button-selfie"
-                        onClick={handleTakeSelfie}
+                        className="hidden"
+                        id="login"
+                        onClick={handleLoginClick}
                       >
-                        Take a selfie
-                        <FontAwesomeIcon
-                          icon={faCamera}
-                          className="icon-selfie"
-                          size="lg"
-                          style={{ margin: "0 5px" }}
-                        />
+                        Sign In
                       </button>
-                    </OverlayTrigger>
+                    </div>
+                    <div className="toggle-panel toggle-right">
+                      <h1>New here?</h1>
+                      <p>
+                        Enroll into TicketHub for the hottest concerts near you!
+                      </p>
+                      <button
+                        className="hidden"
+                        id="register"
+                        onClick={handleCreateClick}
+                      >
+                        Sign Up
+                      </button>
+                    </div>
                   </div>
                 </div>
-                {errors.photo && <div className="error-api">{errors.photo[0]}</div>}
-              </form>
-            </div>
-            <div className="form-container sign-in">
-              <form onSubmit={handleLogin}>
-                <h1>Sign In</h1>
-                <input
-                  type="email"
-                  name="emaillogin"
-                  placeholder="Email"
-                  onChange={handleInputLoginChange}
-                  required
-                />
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  onChange={handleInputLoginChange}
-                  required
-                />
-                {/*eslint-disable-next-line*/}
-                <a href="#">Forgot your password?</a>
-
-                <button type="submit" className="button-signIn">
-                  Sign In
-                </button>
-              </form>
-            </div>
-            <div className="toggle-container">
-              <div className="toggle">
-                <div className="toggle-panel toggle-left">
-                  <h1>Already an user? </h1>
-                  <p>Jump in to the greatest shows by signing in!</p>
-                  <button
-                    className="hidden"
-                    id="login"
-                    onClick={handleLoginClick}
-                  >
-                    Sign In
-                  </button>
-                </div>
-                <div className="toggle-panel toggle-right">
-                  <h1>New here?</h1>
-                  <p>
-                    Enroll into TicketHub for the hottest concerts near you!
-                  </p>
-                  <button
-                    className="hidden"
-                    id="register"
-                    onClick={handleCreateClick}
-                  >
-                    Sign Up
-                  </button>
-                </div>
               </div>
-            </div>
-          </div>
-        </Col>
-      </Container>
+            </Col>
+          </Container>
 
-      {/* Modal para previsualización de la selfie */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Take a Selfie</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {cameraActive ? (
-            <div>
-              <video id="camera-preview" style={{ width: "100%" }}></video>
-              <Button variant="primary" onClick={takePhoto}>
-                Take Photo
-              </Button>
-            </div>
-          ) : (
-            <img
-              src={previewSrc}
-              alt="Selfie Preview"
-              className="selfie-preview-modal"
-            />
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          {photoTaken ? (
-            <>
-              <Button variant="secondary" onClick={handleRetakeSelfie}>
-                Retake
-              </Button>
-              <Button variant="primary" onClick={handleSaveSelfie}>
-                Save
-              </Button>
-            </>
-          ) : (
-            <Button variant="secondary" onClick={() => setShowModal(false)}>
-              Close
-            </Button>
-          )}
-        </Modal.Footer>
-      </Modal>
+          {/* Modal para previsualización de la selfie */}
+          <Modal show={showModal} onHide={() => setShowModal(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title>Take a Selfie</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {cameraActive ? (
+                <div>
+                  <video id="camera-preview" style={{ width: "100%" }}></video>
+                  <Button variant="primary" onClick={takePhoto}>
+                    Take Photo
+                  </Button>
+                </div>
+              ) : (
+                <img
+                  src={previewSrc}
+                  alt="Selfie Preview"
+                  className="selfie-preview-modal"
+                />
+              )}
+            </Modal.Body>
+            <Modal.Footer>
+              {photoTaken ? (
+                <>
+                  <Button variant="secondary" onClick={handleRetakeSelfie}>
+                    Retake
+                  </Button>
+                  <Button variant="primary" onClick={handleSaveSelfie}>
+                    Save
+                  </Button>
+                </>
+              ) : (
+                <Button variant="secondary" onClick={() => setShowModal(false)}>
+                  Close
+                </Button>
+              )}
+            </Modal.Footer>
+          </Modal>
+        </>
+      )}
     </>
   );
 }
