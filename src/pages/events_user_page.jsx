@@ -27,7 +27,7 @@ const MainContent = styled.div`
 `;
 
 export function UserEvent() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [visibleEvents, setVisibleEvents] = useState(6); // Controla cuántos eventos se muestran
   const URL_BACKEND = "http://127.0.0.1:8000";
@@ -72,7 +72,7 @@ export function UserEvent() {
   }, [eventsback]);
 
   const [selectedEvent, setSelectedEvent] = useState(null);
-    //eslint-disable-next-line
+  //eslint-disable-next-line
   const [selectedEventId, setSelectedEventId] = useState(null);
 
   const handleBuyTicketsClick = (eventData) => {
@@ -86,7 +86,7 @@ export function UserEvent() {
     const cost = selectedEvent.price;
     /* const cost = 500; */
     const event = selectedEvent.id;
-    const assistant = sessionStorage.getItem("user_id")
+    const assistant = sessionStorage.getItem("user_id");
 
     /* const assistant = 27; */
     const name = document.getElementById("formName").value;
@@ -226,7 +226,7 @@ export function UserEvent() {
                   location={event.place}
                   category={event.category}
                   imageUrl={event.file_cover}
-                  price= {event.price}
+                  price={event.price}
                 />
 
                 <Button
@@ -266,9 +266,15 @@ export function UserEvent() {
         backdrop="static"
         keyboard={false}
         onHide={() => setSelectedEvent(null)}
-        size="xl"
+        size="md"
       >
-        <Modal.Header closeButton>
+        <Modal.Header
+          closeButton
+          style={{
+            background: "linear-gradient(to right, #6366F1, #9333EA)",
+            color: "white",
+          }}
+        >
           <Modal.Title>
             <b>{selectedEvent && selectedEvent.name}</b>
           </Modal.Title>
@@ -292,10 +298,7 @@ export function UserEvent() {
           <Form style={{ marginTop: "1rem" }}>
             <Form.Group controlId="formQuantity" className="mb-3">
               <Form.Label className="mb-2">Quantity</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Enter quantity"
-              />
+              <Form.Control type="number" placeholder="Enter quantity" />
             </Form.Group>
             <Form.Group controlId="formName" className="mb-3">
               <Form.Label className="mb-2">Name</Form.Label>
@@ -311,10 +314,24 @@ export function UserEvent() {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="dark" onClick={handleCloseModal}>
+          <Button
+            style={{
+              backgroundColor: "#000",
+              color: "#fff",
+              border: "none",
+            }}
+            onClick={handleCloseModal}
+          >
             Close
           </Button>
-          <Button variant="warning" onClick={handleConfirmPurchase}>
+          <Button
+            onClick={handleConfirmPurchase}
+            style={{
+              backgroundColor: "#6366F1",
+              color: "#fff",
+              border: "none",
+            }}
+          >
             Confirm Purchase
           </Button>
         </Modal.Footer>

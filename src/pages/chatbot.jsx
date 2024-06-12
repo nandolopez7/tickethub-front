@@ -32,7 +32,7 @@ const MainContent = styled.div`
 const API_KEY = process.env.REACT_APP_API_KEY;
 
 export function ChatBot() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -54,7 +54,7 @@ export function ChatBot() {
   const handlePrint = () => {
     window.print();
   };
-  
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -124,12 +124,10 @@ export function ChatBot() {
     chatRef.current.style.overflow = originalOverflow;
   };
 
-
   useEffect(() => {
     // Mostrar el modal al cargar la página
     handleShow();
   }, []);
-
 
   const handleSend = async (message) => {
     const findEventByName = (eventName) => {
@@ -289,8 +287,9 @@ export function ChatBot() {
 
     Además de ser un asesor de moda y entretenimiento, eres un experto en la organización de eventos. Puedes responder preguntas sobre cómo resaltar un evento, mejorar el marketing de un evento, los pasos para hacer un evento exitoso, y cualquier otra consulta referente a la organización y creación de eventos.
 
-    Tu función es ser lo más útil y amigable posible para mejorar la experiencia del usuario en Tickethub. Estos son los eventos que hay en la plataforma, si un usuario pregunta por uno de ellos, o con un nombre similar debes proporcionar información. ${{eventsback}}`,
-
+    Tu función es ser lo más útil y amigable posible para mejorar la experiencia del usuario en Tickethub. Estos son los eventos que hay en la plataforma, si un usuario pregunta por uno de ellos, o con un nombre similar debes proporcionar información. ${{
+      eventsback,
+    }}`,
     };
 
     const apiRequestBody = {
@@ -345,7 +344,7 @@ export function ChatBot() {
       <Container fluid>
         <SidebarUser isOpen={isSidebarOpen} onToggle={setIsSidebarOpen} />
         <MainContent isOpen={isSidebarOpen}>
-        <div
+          <div
             style={{
               position: "relative",
               margin: "0 auto",
@@ -416,10 +415,16 @@ export function ChatBot() {
         onHide={handleClose}
         animation={false}
         backdrop="static"
+        size="xl"
       >
-        <Modal.Header>
+        <Modal.Header
+          style={{
+            background: "linear-gradient(to right, #6366F1, #9333EA)",
+            color: "white",
+          }}
+        >
           <Modal.Title>
-            Condiciones de Uso del Chatbot de Nutrición:
+            Condiciones de Uso del Chatbot de TicketHub:
           </Modal.Title>
         </Modal.Header>
         <Modal.Body
@@ -427,56 +432,81 @@ export function ChatBot() {
             textAlign: "justify",
           }}
         >
-          Bienvenido/a al Chatbot de Nutrición. Antes de utilizar nuestros
-          servicios, te pedimos que leas detenidamente las siguientes
-          condiciones.
+          Bienvenido a TicketHub. Estos Términos y Condiciones de Uso
+          ("Términos") regulan el uso del chatbot ("Chatbot") disponible en
+          nuestra aplicación, que ofrece asesoramiento sobre eventos. Al
+          interactuar con el Chatbot, usted acepta cumplir con estos Términos.
+          Si no está de acuerdo con estos Términos, por favor, no utilice el
+          Chatbot. <br />
+          <b>1. Descripción del Servicio:</b> El Chatbot de TicketHub está
+          diseñado para proporcionar información y asesoramiento sobre eventos,
+          incluyendo detalles sobre eventos futuros, recomendaciones basadas en
+          preferencias del usuario, y asistencia con la compra de entradas. El
+          Chatbot no ofrece asesoramiento financiero, legal ni de cualquier otro
+          tipo profesional.
           <br />
-          Al acceder y utilizar este chatbot, aceptas cumplir con los términos
-          establecidos a continuación:
-          <br />
-          <b>Propósito Informativo:</b> El chatbot de nutrición proporciona
-          información general sobre temas relacionados con la nutrición y el
-          bienestar. La información proporcionada no sustituye el consejo
-          profesional individualizado y está destinada únicamente con fines
-          informativos.
-          <br />
-          <b>Variedad de Usuarios:</b> Reconocemos que cada persona es única, y
-          la información proporcionada por el chatbot puede no ser aplicable a
-          todas las situaciones o a cada individuo. La orientación ofrecida se
-          basa en datos generales y no tiene en cuenta circunstancias personales
-          específicas.
-          <br />
-          <b>Consulta Profesional:</b> Se recomienda encarecidamente que
-          consultes con un profesional de la salud, como un nutricionista o
-          médico, antes de realizar cambios significativos en tu dieta o estilo
-          de vida. El chatbot no puede reemplazar la evaluación personalizada de
-          un profesional de la salud.
-          <br />
-          <b>Limitaciones Tecnológicas:</b> El chatbot utiliza inteligencia
-          artificial para proporcionar respuestas, y aunque se esfuerza por
-          ofrecer información precisa y actualizada, puede haber limitaciones en
-          su capacidad para comprender situaciones complejas o proporcionar
-          respuestas específicas en todos los casos.
-          <br />
-          <b>Confidencialidad:</b> La información proporcionada en el chatbot se
-          maneja de manera confidencial, según nuestra política de privacidad.
-          Sin embargo, ten en cuenta que la seguridad de la información a través
-          de internet no puede garantizarse al 100%.
-          <br />
-          <b>Responsabilidad del Usuario:</b> El usuario asume la
-          responsabilidad de cualquier acción que realice como resultado de la
-          información proporcionada por el chatbot. Ni el chatbot ni sus
-          creadores serán responsables de cualquier consecuencia derivada de las
-          decisiones tomadas basándose en la información proporcionada.
-          <br />
-          Al utilizar este chatbot, aceptas estas condiciones de uso. Si no
-          estás de acuerdo con alguna parte de estas condiciones, te
-          recomendamos que no utilices el servicio. Estas condiciones pueden
-          actualizarse ocasionalmente, y te recomendamos que las revises
-          periódicamente. ¡Gracias por utilizar nuestro Chatbot de Nutrición!
+          <b>2. Uso del Chatbot </b>
+          <ul>
+            <li>
+              <b>2.1 Elegibilidad:</b> El uso del Chatbot está permitido
+              únicamente a usuarios mayores de 18 años. Al utilizar el Chatbot,
+              usted declara y garantiza que cumple con este requisito.
+            </li>
+            <li>
+              <b>2.2 Cuenta de Usuario:</b> Para utilizar algunas funciones del
+              Chatbot, es posible que deba crear una cuenta en TicketHub. Usted
+              es responsable de mantener la confidencialidad de su cuenta y
+              contraseña, y acepta notificar a TicketHub inmediatamente sobre
+              cualquier uso no autorizado de su cuenta.
+            </li>
+            <li>
+              <b>2.3 Conducta del Usuario:</b> Al utilizar el Chatbot, usted se
+              compromete a: No utilizar el Chatbot para ningún propósito ilegal
+              o no autorizado. No interferir ni interrumpir el funcionamiento
+              del Chatbot. No transmitir ningún contenido que sea ilegal,
+              ofensivo, difamatorio, o que infrinja los derechos de terceros.
+            </li>
+          </ul>
+          <b>3. Limitación de Responsabilidad</b>
+          <ul>
+            <li>
+              <b>3.1 Información del Chatbot:</b> El Chatbot proporciona
+              información basada en datos disponibles y algoritmos de
+              recomendación. Aunque TicketHub se esfuerza por garantizar la
+              precisión de la información, no garantiza que toda la información
+              proporcionada por el Chatbot sea completa, precisa o actualizada.
+            </li>
+            <li>
+              <b>3.2 Limitación de Daños:</b> En ningún caso TicketHub será
+              responsable por cualquier daño indirecto, incidental, especial,
+              consecuente o punitivo, incluyendo pero no limitado a, pérdida de
+              beneficios, datos, uso, fondo de comercio, o otras pérdidas
+              intangibles resultantes del uso o la imposibilidad de uso del
+              Chatbot.
+            </li>
+          </ul>
+          <b>4. Modificaciones de los Términos:</b> TicketHub se reserva el
+          derecho de modificar estos Términos en cualquier momento. Cualquier
+          cambio será efectivo inmediatamente después de la publicación de los
+          Términos revisados en nuestra aplicación. El uso continuado del
+          Chatbot después de dichos cambios constituirá su aceptación de los
+          nuevos Términos. <br />
+          <b>5. Terminación: </b> TicketHub puede, a su discreción, suspender o
+          terminar su acceso al Chatbot en cualquier momento, con o sin causa, y
+          sin previo aviso. <br />
+          <b>6. Privacidad:</b> El uso del Chatbot está sujeto a la Política de
+          Privacidad de TicketHub, que describe cómo recopilamos, utilizamos y
+          compartimos su información personal.
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={handleClose}>
+          <Button
+            style={{
+              backgroundColor: "#6366F1",
+              color: "#fff",
+              border: "none",
+            }}
+            onClick={handleClose}
+          >
             Entendido
           </Button>
         </Modal.Footer>
