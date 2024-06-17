@@ -21,7 +21,7 @@ const MainContent = styled.div`
   }
 `;
 export function MyEvents() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   //eslint-disable-next-line
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [visibleEvents, setVisibleEvents] = useState([]);
@@ -30,7 +30,7 @@ export function MyEvents() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   //eslint-disable-next-line
   const [selectedEventId, setSelectedEventId] = useState(null);
-  const URL_BACKEND = "https://tickethub-back.onrender.com";
+  const URL_BACKEND = "http://127.0.0.1:8000";
   
   const userId = sessionStorage.getItem("user_id");
 
@@ -103,6 +103,7 @@ export function MyEvents() {
                   category={event.category}
                   imageUrl={event.file_cover}
                   price={event.price}
+                  tickets={event.tickets}
                 />
               </Col>
             ))}
