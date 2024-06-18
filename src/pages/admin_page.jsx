@@ -145,7 +145,7 @@ export function UserAdmin() {
     const user_photo = verificationPhoto
     const event= selectedEventId;
 
-    const URL_BACKEND = "https://tickethub-back.onrender.com/";
+    const URL_BACKEND = "https://tickethub-back.onrender.com";
 
     
     //axios;
